@@ -1,0 +1,18 @@
+﻿import { chromium } from 'playwright';
+import { createServer } from 'node:http';
+import { readFile } from 'node:fs/promises';
+import { extname, join, normalize } from 'node:path';
+const ROOT = new URL('../dist/', import.meta.url).pathname.replace(/^\//,'');
+const T={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.webmanifest':'application/manifest+json','.png':'image/png','.svg':'image/svg+xml','.jpg':'image/jpeg'};
+const s=createServer(async(q,r)=>{let p=q.url.split('?')[0]; if(p==='/')p='/index.html'; try{const b=await readFile(join(ROOT,normalize(p).replace(/^([/\\])+/,''))); r.writeHead(200,{'content-type':T[extname(p)]||'application/octet-stream'}); r.end(b);}catch{r.writeHead(404);r.end('x');}});
+await new Promise(r=>s.listen(4180,r));
+const br=await chromium.launch(); const pg=await br.newPage({viewport:{width:420,height:880},deviceScaleFactor:2,colorScheme:'dark'});
+await pg.goto('http://localhost:4180/',{waitUntil:'networkidle'}); await pg.waitForTimeout(500);
+const shot=async n=>{await pg.waitForTimeout(300); await pg.screenshot({path:'shots/'+n+'.png'});};
+await pg.click('.nav-btn[data-screen="home"]'); await shot('01-home');
+await pg.click('.nav-btn[data-screen="plan"]'); await shot('02-plan');
+await pg.click('.nav-btn[data-screen="products"]'); await shot('03-products-all');
+await pg.click('#screen-products .stab:has-text("Nutrition")'); await shot('04-products-cat');
+await pg.click('.nav-btn[data-screen="tasks"]'); await shot('05-tasks');
+await pg.click('.nav-btn[data-screen="settings"]'); await shot('06-more');
+await br.close(); s.close(); console.log('ok');

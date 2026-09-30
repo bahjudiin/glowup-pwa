@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "node test/smoke.mjs",
+    "test:install": "npm i -D playwright@1.61.1 && npx playwright install chromium"
   },
   "devDependencies": {
     "sharp": "^0.35.2",
