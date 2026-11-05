@@ -1,0 +1,10 @@
+{
+  "name": "glowup-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GlowUp — Men's Transformation Research Library. Mobile-first static site with categories, sort tabs, filters, products, foods, and meal templates.",
+  "scripts": {
+    "build": "echo 'Static site — no build step'",
+    "start": "vercel dev"
+  }
+}

@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>GlowUp Blueprint</title>
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#0a0a0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>GlowUp Blueprint</title>
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#0a0a0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh;
+    padding-bottom:90px;
+  }
+  .dark{--bg:#0a0a0f;--surface:#111118;--card:#161620;--text:#f8fafc;--muted:#94a3b8;--border:#27273a}
+  .light{--bg:#f8fafc;--surface:#ffffff;--card:#ffffff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0}
+
+  /* Utilities */
+  .container{max-width:680px;margin:0 auto;padding:0 16px}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+  .flex{display:flex}.items-center{align-items:center}.justify-between{justify-content:space-between}
+  .gap-2{gap:8px}.gap-3{gap:12px}.gap-4{gap:16px}
+  .text-xs{font-size:0.75rem}.text-sm{font-size:0.875rem}.text-base{font-size:1rem}.text-lg{font-size:1.125rem}.text-xl{font-size:1.25rem}
+  .font-medium{font-weight:500}.font-semibold{font-weight:600}.font-bold{font-weight:700}
+  .text-center{text-align:center}
+  .mb-2{margin-bottom:8px}.mb-4{margin-bottom:16px}.mb-6{margin-bottom:24px}.mb-8{margin-bottom:32px}
+  .mt-4{margin-top:16px}.mt-6{margin-top:24px}.mt-8{margin-top:32px}
+  .px-4{padding-left:16px;padding-right:16px}.py-3{padding-top:12px;padding-bottom:12px}
+  .pt-3{padding-top:12px}.pb-3{padding-bottom:12px}.p-4{padding:16px}.p-6{padding:24px}
+  .rounded-xl{border-radius:1rem}.rounded-full{border-radius:9999px}
+  .border{border:1px solid var(--border)}.border-b{border-bottom:1px solid var(--border)}
+  .bg-surface{background:var(--surface)}.bg-card{background:var(--card)}.bg-bg{background:var(--bg)}
+  .text-primary{color:var(--primary)}.text-muted{color:var(--muted)}
+  .overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}
+
+  /* Header / search */
+  header{position:sticky;top:0;z-index:40;background:color-mix(in srgb, var(--bg) 80%, transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+  .search-wrap{position:relative;width:100%;max-width:680px;margin:0 auto;padding:10px 16px 14px}
+  #search{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:10px 12px 10px 40px;border-radius:10px;font-size:0.95rem;outline:none}
+  #search::placeholder{color:var(--muted)}
+  #search:focus{border-color:var(--primary)}
+  .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted);pointer-events:none}
+  .clear-btn{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;display:none}
+  .clear-btn.visible{display:block}
+
+  /* Category tabs - horizontal scroll */
+  .tab-strip{position:sticky;top:44px;z-index:30;background:color-mix(in srgb, var(--bg) 85%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:8px 16px}
+  .tab-scroll{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-bottom:4px}
+  .tab-scroll::-webkit-scrollbar{display:none}
+  .tab{white-space:nowrap;background:var(--card);border:1px solid var(--border);color:var(--muted);padding:8px 14px;border-radius:999px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all .2s;flex-shrink:0}
+  .tab:hover{color:var(--text);border-color:var(--primary)}
+  .tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .tab .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--muted);margin-right:6px}
+  .tab.active .dot{background:#fff}
+
+  /* Sort tabs */
+  .sort-wrap{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 16px;padding:0 16px 8px}
+  .sort-wrap::-webkit-scrollbar{display:none}
+  .sort-pill{white-space:nowrap;background:transparent;border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:999px;font-size:0.8rem;font-weight:600;cursor:pointer;flex-shrink:0;transition:all .2s}
+  .sort-pill:hover{border-color:var(--primary);color:var(--text)}
+  .sort-pill.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+  /* Filters sheet */
+  .filter-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:transparent;border:1px solid var(--border);color:var(--muted);padding:10px 16px;border-radius:10px;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all .2s;margin-bottom:16px}
+  .filter-btn:hover{color:var(--primary);border-color:var(--primary)}
+  .filter-btn .active-dot{width:6px;height:6px;border-radius:50%;background:var(--primary);display:none}
+  .filter-btn.has-active .active-dot{display:block}
+
+  .sheet{position:fixed;inset:0;z-index:60;display:none}
+  .sheet.open{display:flex;flex-direction:column}
+  .sheet-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px)}
+  .sheet-panel{position:absolute;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);padding:24px 20px 34px;max-height:85vh;overflow-y:auto;box-shadow:0 -20px 40px -10px rgba(0,0,0,.4)}
+  .sheet-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+  .sheet-title{font-size:1.1rem;font-weight:700}
+  .sheet-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.2rem;line-height:1}
+  .sheet-section{margin-bottom:20px}
+  .sheet-label{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px;display:block}
+  .chip-group{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:999px;font-size:0.85rem;cursor:pointer;transition:all .2s;white-space:nowrap}
+  .chip:hover{border-color:var(--primary);color:var(--text)}
+  .chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:10px}
+  .switch{position:relative;width:44px;height:24px;background:var(--border);border-radius:999px;cursor:pointer}
+  .switch::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .2s}
+  .switch.on{background:var(--primary)}
+  .switch.on::after{transform:translateX(20px)}
+  .sheet-actions{display:flex;gap:10px;margin-top:24px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:10px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap}
+  .btn-primary{background:var(--primary);color:#fff;padding:10px 20px;font-size:0.9rem}
+  .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);padding:10px 20px;font-size:0.9rem}
+  .btn-outline:hover{background:var(--card)}
+
+  /* Cards */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:1rem;overflow:hidden;transition:transform .2s,border-color .2s}
+  .card:hover{border-color:var(--primary)/50;transform:translateY(-2px)}
+  .card-header{padding:14px 16px;border-bottom:1px solid var(--border)}
+  .card-title{font-size:1rem;font-weight:700;line-height:1.3}
+  .card-desc{font-size:0.85rem;color:var(--muted);margin-top:4px}
+  .card-body{padding:14px 16px}
+  .card-footer{padding:12px 16px;border-top:1px solid var(--border);background:color-mix(in srgb,var(--card) 90%,var(--bg))}
+
+  .row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .badge{display:inline-flex;align-items:center;border-radius:999px;padding:3px 10px;font-size:0.7rem;font-weight:700;border:1px solid}
+  .badge-high{border-color:#10b981;color:#10b981;background:rgba(16,185,129,.1)}
+  .badge-mod{border-color:#f59e0b;color:#f59e0b;background:rgba(245,158,11,.1)}
+  .badge-low{border-color:#94a3b8;color:#94a3b8;background:rgba(148,163,184,.1)}
+  .badge-verified{border-color:#22c55e;color:#22c55e;background:rgba(34,197,94,.1)}
+  .badge-link{border-color:#64748b;color:#64748b;background:rgba(100,116,139,.1)}
+  .badge-essential{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .badge-highval{background:var(--indigo);color:#fff;border-color:var(--indigo)}
+  .badge-optional{border-color:var(--border);color:var(--muted)}
+  .badge-skip{border-color:var(--rose);color:var(--rose);background:rgba(244,63,94,.1)}
+
+  .price-row{display:flex;align-items:baseline;gap:4px}
+  .price-big{font-size:1.35rem;font-weight:800}
+  .price-small{font-size:0.8rem;color:var(--muted)}
+  .per-serving{font-size:0.75rem;color:var(--muted);margin-top:2px}
+
+  .meta-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;background:color-mix(in srgb,var(--border) 60%,transparent);border:1px solid var(--border);border-radius:8px;font-size:0.72rem;color:var(--muted);margin:2px}
+  .meta-chip span:first-child{color:var(--primary);font-weight:700}
+
+  /* Food row */
+  .food{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);gap:12px}
+  .food:last-child{border-bottom:none}
+  .food-info{flex:1;min-width:0}
+  .food-name{font-weight:700}
+  .food-group{font-size:0.7rem;text-transform:uppercase;letter-spacing:.03em}
+  .food-stats{display:flex;gap:14px;margin-top:6px;font-size:0.8rem;color:var(--muted)}
+  .food-stats b{color:var(--text)}
+  .food-side{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+  .food-cost{font-size:0.8rem;color:var(--muted);text-align:right}
+  .food-notes{font-size:0.78rem;color:var(--muted);margin-top:4px}
+
+  /* Meal card */
+  .meal-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .meal-type{font-size:0.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+  .meal-title{font-size:1.05rem;font-weight:700;padding:14px 16px}
+  .meal-body{padding:0 16px 14px}
+  .meal-meta{display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+  .meal-notes{font-size:0.85rem;color:var(--muted);margin-bottom:8px}
+  .ingredients{display:flex;flex-wrap:wrap;gap:6px}
+  .ing{background:color-mix(in srgb,var(--border) 40%,transparent);border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-size:0.75rem;color:var(--muted)}
+
+  /* Empty state */
+  .empty{text-align:center;padding:48px 24px;opacity:.7}
+  .empty-icon{font-size:2.5rem;margin-bottom:12px}
+  .empty-title{font-weight:700;margin-bottom:6px}
+  .empty-desc{color:var(--muted);font-size:0.9rem;max-width:360px;margin:0 auto}
+
+  /* Bottom nav */
+  .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);border-top:1px solid var(--border);padding:8px 4px 16px;display:flex;justify-content:center;gap:0}
+  .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 10px;color:var(--muted);text-decoration:none;font-size:0.7rem;font-weight:700;cursor:pointer;min-width:60px}
+  .nav-item svg{width:20px;height:20px}
+  .nav-item.active{color:var(--primary)}
+  .theme-toggle{position:absolute;right:12px;top:10px;background:var(--card);border:1px solid var(--border);border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted)}
+  .theme-toggle:hover{color:var(--primary)}
+
+  .section-label{font-size:0.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:24px 0 12px;display:block}
+  .divider{height:1px;background:var(--border);margin:20px 0}
+
+  a{color:var(--primary);text-decoration:none}
+  a:hover{text-decoration:underline}
+  button:focus-visible,a:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<!-- Theme toggle -->
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+
+<!-- Header + search -->
+<header>
+  <div class="search-wrap">
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="search" id="search" placeholder="Search articles, products, foods, meals…" autocomplete="off">
+    <button class="clear-btn" id="clearSearch" aria-label="Clear">×</button>
+  </div>
+</header>
+
+<div class="container">
+  <!-- Category tabs -->
+  <div class="tab-strip">
+    <div class="tab-scroll" id="tabScroll"></div>
+    <div style="height:4px"></div>
+  </div>
+
+  <!-- Search bar (mobile fallback) -->
+  <button class="filter-btn" id="filterBtn" aria-label="Filters">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <span>Filters</span>
+    <span class="active-dot" id="filterDot"></span>
+  </button>
+
+  <!-- Sort tabs -->
+  <div class="sort-wrap" id="sortWrap"></div>
+
+  <!-- Content -->
+  <div id="content"></div>
+</div>
+
+<!-- Filters sheet -->
+<div class="sheet" id="filterSheet">
+  <div class="sheet-backdrop" id="sheetBackdrop"></div>
+  <div class="sheet-panel" id="sheetPanel">
+    <div class="sheet-header">
+      <span class="sheet-title">Filters</span>
+      <button class="sheet-close" id="sheetClose">✕</button>
+    </div>
+    <div class="sheet-section">
+      <span class="sheet-label">Category</span>
+      <div class="chip-group" id="catChips"></div>
+    </div>
+    <div class="sheet-section">
+      <span class="sheet-label">Evidence grade</span>
+      <div class="chip-group" id="evChips"></div>
+    </div>
+    <div class="sheet-section">
+      <span class="sheet-label">Cost tier</span>
+      <div class="chip-group" id="costChips"></div>
+    </div>
+    <div class="toggle-row">
+      <span>Verified prices only</span>
+      <div class="switch" id="verifiedSwitch" role="switch" aria-checked="false"></div>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn btn-outline" id="resetFilters">Reset</button>
+      <button class="btn btn-primary" id="applyFilters">Apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a class="nav-item active" href="#" data-section="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span>Home</span></a>
+  <a class="nav-item" href="#" data-section="products"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L21 1"/></svg><span>Products</span></a>
+  <a class="nav-item" href="#" data-section="foods"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 13h2M7 13h2M12 13h2M17 13h2M2 17h2M7 17h2M12 17h2M17 17h2M2 21h2M7 21h2M12 21h2M17 21h2M4 7v10M9 7v10M14 7v10M19 7v10"/></svg><span>Foods</span></a>
+  <a class="nav-item" href="#" data-section="meals"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="2" y1="7" x2="22" y2="7"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="17" x2="22" y2="17"/><line x1="2" y1="22" x2="22" y2="22"/></svg><span>Meals</span></a>
+</nav>
+
+<script>
+// ============ DATA ASSEMBLED FROM MD FILES ============
+const CATEGORIES = [
+  {id:'fat-loss',title:'Fat Loss',subtitle:'Deficits, rates, plateaus, fasting',icon:'🔥',files:['02','04','20'],color:'bg-orange-500/20 text-orange-400'},
+  {id:'muscle-training',title:'Muscle & Training',subtitle:'Protein, resistance training & recomposition',icon:'💪',files:['03','10','06'],color:'bg-emerald-500/20 text-emerald-400'},
+  {id:'nutrition-foods',title:'Nutrition & Foods',subtitle:'Volume eating, protein & meal templates',icon:'🍎',files:['01','08','26','09'],color:'bg-red-500/20 text-red-400'},
+  {id:'supplements',title:'Supplements',subtitle:'Creatine, vitamin D, omega-3 & what to skip',icon:'💊',files:['16','17'],color:'bg-purple-500/20 text-purple-400'},
+  {id:'products',title:'Product Directory',subtitle:'Verified links, prices & cost-per-serving',icon:'🛒',files:['18','09'],color:'bg-blue-500/20 text-blue-400'},
+  {id:'skincare-grooming',title:'Skincare & Grooming',subtitle:'Sunscreen, retinoids, hair & appearance',icon:'✨',files:['14','15','24'],color:'bg-pink-500/20 text-pink-400'},
+  {id:'sleep-recovery',title:'Sleep & Recovery',subtitle:'Sleep protocol, caffeine & appetite',icon:'🌙',files:['11','05'],color:'bg-indigo-500/20 text-indigo-400'},
+  {id:'health-longevity',title:'Health & Longevity',subtitle:'Blood pressure, screening & anti-aging',icon:'❤️',files:['12','13','25'],color:'bg-rose-500/20 text-rose-400'},
+  {id:'maintenance',title:'Maintenance',subtitle:'Regain prevention & the 2-kg rule',icon:'🛡️',files:['06','07','21'],color:'bg-amber-500/20 text-amber-400'},
+  {id:'myths-evidence',title:'Myths & Evidence',subtitle:'Unsupported claims & references',icon:'🛡️',files:['22','23','01'],color:'bg-slate-500/20 text-slate-400'},
+  {id:'master-summary',title:'Master Summary',subtitle:'The full protocol & ranked list',icon:'📄',files:['00'],color:'bg-slate-900 text-slate-300'},
+];
+
+const ARTICLES = [
+  {id:'master-summary',title:'Master Summary',summary:'Complete synthesis: ranked intervention list, 16-week protocol, low-maintenance version, safety.',categoryId:'master-summary',fileId:'00',evidenceGrade:'High',costTier:'Free',readTime:'12 min',tags:['protocol','summary']},
+  {id:'fast-fat-loss',title:'Fast Fat Loss',summary:'20–25% energy deficit, protein targets, expected rate of loss, plateaus.',categoryId:'fat-loss',fileId:'02',evidenceGrade:'High',costTier:'Free',readTime:'8 min',tags:['deficit','fat-loss']},
+  {id:'intermittent-fasting',title:'Intermittent Fasting',summary:'16:8 vs 14:10, evidence vs claims, autophagy myths.',categoryId:'fat-loss',fileId:'04',evidenceGrade:'Moderate',costTier:'Free',readTime:'10 min',tags:['fasting','16:8']},
+  {id:'aggressive-transformation',title:'Aggressive but Safe Transformation',summary:'16-week maximum-reasonable-speed protocol.',categoryId:'fat-loss',fileId:'20',evidenceGrade:'Moderate',costTier:'Free',readTime:'10 min',tags:['16-week','protocol']},
+  {id:'body-recomposition',title:'Body Recomposition & Muscle Retention',summary:'Protein 2.0–2.6 g/kg, resistance training, keeping muscle in a deficit.',categoryId:'muscle-training',fileId:'03',evidenceGrade:'High',costTier:'Low',readTime:'10 min',tags:['protein','muscle']},
+  {id:'exercise-neat',title:'Exercise & NEAT',summary:'Fitness, strength, steps, NEAT, programmes, cardio.',categoryId:'muscle-training',fileId:'10',evidenceGrade:'High',costTier:'Free',readTime:'8 min',tags:['exercise','steps']},
+  {id:'muscle-preservation',title:'Muscle Preservation',summary:'Ranked levers, protein target methods, home training plan.',categoryId:'muscle-training',fileId:'06',evidenceGrade:'High',costTier:'Free',readTime:'8 min',tags:['preservation','protein']},
+  {id:'high-volume-foods',title:'High-Volume, Low-Calorie Foods',summary:'Vegetables, fruits & protein ranked by volume per calorie.',categoryId:'nutrition-foods',fileId:'01',evidenceGrade:'Moderate-High',costTier:'Very low',readTime:'10 min',tags:['volume-eating','satiety']},
+  {id:'nutrition-protein',title:'Nutrition & Protein',summary:'Protein targets, diet patterns, cost per gram.',categoryId:'nutrition-foods',fileId:'08',evidenceGrade:'High',costTier:'Low',readTime:'8 min',tags:['protein','diet']},
+  {id:'meal-templates',title:'Meal Templates & Food List',summary:'Breakfast, lunch/dinner & snack templates, 7-day rotation.',categoryId:'nutrition-foods',fileId:'26',evidenceGrade:'Moderate-High',costTier:'Low',readTime:'6 min',tags:['recipes','shopping']},
+  {id:'fiber-low-cost-foods',title:'Fiber & Low-Cost Foods',summary:'Cheapest fiber & protein sources, psyllium, budget menus.',categoryId:'nutrition-foods',fileId:'01',evidenceGrade:'Moderate-High',costTier:'Very low',readTime:'7 min',tags:['fiber','budget']},
+  {id:'supplements-review',title:'Supplements Evidence Review',summary:'Creatine, vitamin D, omega-3 — and what not to buy.',categoryId:'supplements',fileId:'16',evidenceGrade:'High',costTier:'Low',readTime:'10 min',tags:['creatine','verdict']},
+  {id:'expensive-drugs-alternatives',title:'Expensive Drugs & Alternatives',summary:'GLP-1 drugs, bariatric surgery, lifestyle alternatives.',categoryId:'supplements',fileId:'17',evidenceGrade:'High',costTier:'Very high',readTime:'10 min',tags:['GLP-1','surgery']},
+  {id:'product-directory',title:'Product Directory',summary:'Verified iHerb links, prices, cost-per-serving math.',categoryId:'products',fileId:'18',evidenceGrade:'High',costTier:'Low',readTime:'8 min',tags:['products','prices']},
+  {id:'amazon-iherb-products',title:'Amazon & iHerb Products',summary:'Free → cheap food → cheap tools → supplements priority order.',categoryId:'products',fileId:'09',evidenceGrade:'Moderate',costTier:'Low',readTime:'7 min',tags:['amazon','iherb']},
+  {id:'skincare-glow-up',title:'Skincare & Glow Up',summary:'Sunscreen, retinoids, acne, best low-cost glow-up for men.',categoryId:'skincare-grooming',fileId:'14',evidenceGrade:'High',costTier:'Very low',readTime:'8 min',tags:['sunscreen','retinoid']},
+  {id:'mens-grooming',title:"Men's Grooming & Appearance",summary:'Facial fat, teeth, hair, posture, clothing, fragrance.',categoryId:'skincare-grooming',fileId:'15',evidenceGrade:'Moderate',costTier:'Low',readTime:'8 min',tags:['grooming','hair']},
+  {id:'hair-loss-scalp',title:'Hair Loss & Scalp',summary:'Androgenetic alopecia, finasteride, minoxidil, safety.',categoryId:'skincare-grooming',fileId:'24',evidenceGrade:'Moderate-High',costTier:'Low',readTime:'8 min',tags:['hair-loss','finasteride']},
+  {id:'sleep-recovery',title:'Sleep & Recovery',summary:'Sleep evidence, CBT-I, apnea screening, recovery protocol.',categoryId:'sleep-recovery',fileId:'11',evidenceGrade:'Moderate-High',costTier:'Free',readTime:'8 min',tags:['sleep','apnea']},
+  {id:'appetite-satiety',title:'Appetite & Satiety',summary:'Protein, fibre, volume, sleep — reduce intake 300–700 kcal/day.',categoryId:'sleep-recovery',fileId:'05',evidenceGrade:'Moderate-High',costTier:'Free',readTime:'7 min',tags:['appetite','satiety']},
+  {id:'mens-health-longevity',title:"Men's Health & Longevity",summary:'Mortality levers, BP, screening, testosterone, alcohol.',categoryId:'health-longevity',fileId:'12',evidenceGrade:'High',costTier:'Free',readTime:'10 min',tags:['longevity','blood-pressure']},
+  {id:'anti-aging-interventions',title:'Anti-Aging Interventions',summary:'Graded table of every popular longevity intervention.',categoryId:'health-longevity',fileId:'13',evidenceGrade:'Moderate',costTier:'High',readTime:'10 min',tags:['anti-aging','NMN']},
+  {id:'bloodwork-tracking',title:'Bloodwork & Tracking',summary:'What to measure, when, how to interpret.',categoryId:'health-longevity',fileId:'25',evidenceGrade:'Moderate',costTier:'Low',readTime:'7 min',tags:['bloodwork','tracking']},
+  {id:'permanent-weight-maintenance',title:'Permanent Weight Maintenance',summary:'Biology of regain, maintenance protocol, 2-kg rule.',categoryId:'maintenance',fileId:'06',evidenceGrade:'Moderate',costTier:'Free',readTime:'8 min',tags:['maintenance','regain']},
+  {id:'weight-regain-prevention',title:'Weight Regain Prevention',summary:'Early-warning system, disruption plans.',categoryId:'maintenance',fileId:'07',evidenceGrade:'Moderate',costTier:'Free',readTime:'7 min',tags:['regain-prevention']},
+  {id:'maintenance-after-weight-loss',title:'Maintenance After Weight Loss',summary:'12-week post-diet transition playbook.',categoryId:'maintenance',fileId:'21',evidenceGrade:'Moderate',costTier:'Free',readTime:'8 min',tags:['post-diet','transition']},
+  {id:'research-references',title:'Research References',summary:'Master reference index — 141 PMIDs + 45 URLs.',categoryId:'myths-evidence',fileId:'22',evidenceGrade:'High',costTier:'Free',readTime:'10 min',tags:['references','PMID']},
+  {id:'unsupported-claims-myths',title:'Unsupported Claims & Myths',summary:'Myth-by-myth verdicts with evidence grades.',categoryId:'myths-evidence',fileId:'23',evidenceGrade:'High',costTier:'Free',readTime:'8 min',tags:['myths','debunked']},
+  {id:'evidence-research-method',title:'Evidence & Research Method',summary:'How claims are graded, verification method, limitations.',categoryId:'myths-evidence',fileId:'01',evidenceGrade:'High',costTier:'Free',readTime:'6 min',tags:['method','grading']},
+];
+
+const PRODUCTS = [
+  {id:'psyllium-husk',name:'NOW Foods Psyllium Husk Powder',brand:'NOW Foods',category:'Fibre',price:11.30,priceVerified:true,priceDate:'1 Nov 2026',perServing:'~$0.17 at 5 g',currency:'USD',url:'https://www.iherb.com/pr/now-foods-psyllium-husk-powder-12-oz-340-g/8934',source:'iHerb',evidence:'Moderate-High',purpose:'Satiety, glycaemic control, LDL, regularity',use:'3–5 g (1 tsp) in 300 ml water, 1–2×/day before the hungriest meal',risks:['Bloating/gas if increased quickly','Obstruction if taken with too little fluid'],contraindications:['Bowel obstruction/stricture','Dysphagia','Recent abdominal surgery'],essential:'high-value',tier:'High value, low cost',tags:['fibre','satiety','psyllium','budget']},
+  {id:'creatine-monohydrate',name:'California Gold Nutrition Pure Creatine Monohydrate',brand:'California Gold Nutrition',category:'Ergogenic',price:19.15,priceVerified:true,priceDate:'1 Nov 2026',perServing:'~$0.21/day at 5 g',currency:'USD',url:'https://www.iherb.com/pr/california-gold-nutrition-sport-pure-creatine-monohydrate-unflavored-1-lb-454-g/71026',source:'iHerb',evidence:'High',purpose:'Strength, lean mass, training performance',use:'3–5 g/day, any time; no loading needed',risks:['~1 kg water retention','GI upset at large single doses'],contraindications:['Kidney disease (medical advice)','Not for children'],essential:'essential',tier:'Best-value supplement',tags:['creatine','strength','muscle','best-value']},
+  {id:'vitamin-d3',name:'NOW Foods Vitamin D-3, 2,000 IU, 120 softgels',brand:'NOW Foods',category:'Micronutrient',price:5.18,priceVerified:true,priceDate:'1 Nov 2026',perServing:'~$0.04/day',currency:'USD',url:'https://www.iherb.com/pr/now-foods-vitamin-d3-2-000-iu-120-softgels/8229',source:'iHerb',evidence:'High (deficiency)',purpose:'Correct/maintain vitamin D status',use:'1 softgel/day with fat; only if low sun or tested low',risks:['Hypercalcaemia with chronic megadosing'],contraindications:['Hypercalcaemia','Granulomatous disease'],essential:'optional',tier:'Conditional — only if deficient',tags:['vitamin-d','immunity','conditional']},
+  {id:'whey-isolate',name:'CGN Sport Whey Protein Isolate 5 lb',brand:'California Gold Nutrition',category:'Protein',price:105.00,priceVerified:true,priceDate:'1 Nov 2026',perServing:'~$1.40 per 30 g protein',currency:'USD',url:'https://www.iherb.com/pr/california-gold-nutrition-sport-whey-protein-isolate-unflavored-5-lb-2-27-kg/76479',source:'iHerb',evidence:'High',purpose:'Convenience protein to reach 1.6–2.4 g/kg/day',use:'1–2 scoops/day as needed',risks:['GI upset (lactose intolerance)','Acne in some individuals'],contraindications:['Milk allergy'],essential:'optional',tier:'Optional — convenience',tags:['protein','whey','optional']},
+  {id:'adapalene',name:'Adapalene 0.1% Gel',brand:'Generic OTC',category:'Skincare',price:15.00,priceVerified:false,priceDate:'varies',perServing:'~$1/day',currency:'USD',url:'https://www.amazon.com/s?k=adapalene+0.1+gel',source:'Search',evidence:'High',purpose:'Highest-evidence OTC retinoid for acne & photoaging',use:'2–7 nights/week as tolerated + moisturiser',risks:['Initial irritation/dryness','Sun sensitivity — sunscreen mandatory'],contraindications:['Pregnancy (consult doctor)'],essential:'high-value',tier:'Best value anti-aging',tags:['retinoid','acne','skincare']},
+  {id:'sunscreen',name:'Broad-Spectrum SPF 30–50 Sunscreen',brand:'Drugstore brand',category:'Skincare',price:12.00,priceVerified:false,priceDate:'varies',perServing:'~$0.30–0.60/day',currency:'USD',url:'https://www.amazon.com/s?k=broad+spectrum+spf+50+sunscreen+fragrance+free',source:'Search',evidence:'High',purpose:'Daily photoageing & melanoma prevention',use:'Every morning, face + neck',risks:['None significant'],contraindications:['Known allergy to filters'],essential:'essential',tier:'Highest-value skincare',tags:['sunscreen','SPF','essential']},
+  {id:'food-scale',name:'Digital Kitchen Scale (1 g)',brand:'Any',category:'Tool',price:12.00,priceVerified:false,priceDate:'varies',perServing:null,currency:'USD',url:'https://www.amazon.com/s?k=digital+kitchen+scale+1g',source:'Search',evidence:'High (enables behaviour)',purpose:'Portion calibration for 2–4 weeks',use:'Weigh food for 2–4 weeks',risks:['None'],contraindications:['None'],essential:'essential',tier:'Essential — first purchase',tags:['scale','tool','portion']},
+  {id:'bathroom-scale',name:'Digital Bathroom Scale',brand:'Any',category:'Tool',price:20.00,priceVerified:false,priceDate:'varies',perServing:null,currency:'USD',url:'https://www.amazon.com/s?k=digital+bathroom+scale',source:'Search',evidence:'High',purpose:'Lifelong weight feedback loop',use:'Weigh daily; track 7-day average',risks:['None'],contraindications:['None'],essential:'essential',tier:'Essential — skip subscriptions',tags:['scale','weight','tracking']},
+  {id:'resistance-bands',name:'Resistance Band Set (with handles)',brand:'Any',category:'Equipment',price:30.00,priceVerified:false,priceDate:'varies',perServing:null,currency:'USD',url:'https://www.amazon.com/s?k=resistance+band+set+with+handles',source:'Search',evidence:'Moderate-High',purpose:'Cheapest entry to resistance training',use:'Rows, presses, pull-aparts, 2–3×/week',risks:['Band snap if overstretched'],contraindications:['None'],essential:'high-value',tier:'Cheapest effective home option',tags:['bands','equipment','home-training']},
+  {id:'bp-monitor',name:'Validated Upper-Arm BP Monitor',brand:'Validated brand',category:'Health Device',price:35.00,priceVerified:false,priceDate:'varies',perServing:null,currency:'USD',url:'https://www.amazon.com/s?k=validated+upper+arm+blood+pressure+monitor',source:'Search',evidence:'High',purpose:'Silent hypertension detection',use:'Monthly home check, correct technique',risks:['None'],contraindications:['None'],essential:'high-value',tier:'Best health-screening device',tags:['BP','monitor','screening']},
+  {id:'walking-shoes',name:"Men's Running/Walking Shoes",brand:'Entry-level',category:'Footwear',price:60.00,priceVerified:false,priceDate:'varies',perServing:null,currency:'USD',url:'https://www.amazon.com/s?k=men+running+shoes',source:'Search',evidence:'High',purpose:'Enables daily walking — cheapest exercise',use:'Daily steps; replace at ~500–800 km',risks:['None'],contraindications:['None'],essential:'essential',tier:'Essential enabler',tags:['shoes','walking','footwear']},
+  {id:'omega-3',name:'Omega-3 (EPA/DHA) Supplement',brand:'Third-party tested',category:'Micronutrient',price:18.00,priceVerified:false,priceDate:'varies',perServing:'~$0.60/day',currency:'USD',url:'https://www.iherb.com/search?kw=omega-3+epa+dha',source:'Search',evidence:'Moderate',purpose:'Triglyceride reduction if no fish',use:'1–2 g/day combined EPA+DHA if no fish',risks:['Increases AF risk at high doses'],contraindications:['Anticoagulants'],essential:'optional',tier:'Conditional — skip if you eat fish',tags:['omega-3','heart','conditional']},
+  {id:'magnesium',name:'Magnesium Glycinate/Citrate',brand:'Any',category:'Micronutrient',price:12.00,priceVerified:false,priceDate:'varies',perServing:'~$0.40/day',currency:'USD',url:'https://www.iherb.com/search?kw=magnesium+glycinate',source:'Search',evidence:'Moderate (BP), Low (sleep)',purpose:'Small BP reduction; optional sleep aid',use:'200–400 mg elemental magnesium/day if diet poor',risks:['GI upset at high doses'],contraindications:['Kidney disease'],essential:'optional',tier:'Optional, cheap',tags:['magnesium','BP','sleep']},
+];
+
+const FOODS = [
+  {id:'cabbage',name:'Cabbage',group:'Vegetables',kcal:25,protein:1.3,fibre:2.5,water:92,satietyEvidence:'Indirect',cost:'Estimated $0.50/head',availability:'Very good — staple',fdcId:'169975',notes:'Highest-volume cheap vegetable; raw/coleslaw adds chewing time.'},
+  {id:'cucumber',name:'Cucumber',group:'Vegetables',kcal:15,protein:0.7,fibre:0.5,water:95,satietyEvidence:'Indirect',cost:'Unknown',availability:'Very good',fdcId:'168409',notes:'~95% water.'},
+  {id:'tomato',name:'Tomato',group:'Vegetables',kcal:18,protein:0.9,fibre:1.2,water:95,satietyEvidence:'Indirect',cost:'Estimated $1.00/kg',availability:'Very good',fdcId:'170457',notes:''},
+  {id:'spinach',name:'Spinach',group:'Vegetables',kcal:23,protein:2.9,fibre:2.2,water:91,satietyEvidence:'Indirect',cost:'Unknown',availability:'Moderate/seasonal',fdcId:'168462',notes:'Highest protein of the leafy group.'},
+  {id:'carrot',name:'Carrot',group:'Vegetables',kcal:41,protein:0.9,fibre:2.8,water:88,satietyEvidence:'Indirect',cost:'Estimated $2.00/kg',availability:'Very good',fdcId:'170393',notes:'Firm texture slows eating.'},
+  {id:'eggplant',name:'Eggplant',group:'Vegetables',kcal:25,protein:1.0,fibre:3.0,water:92,satietyEvidence:'Indirect',cost:'Unknown',availability:'Very good (local)',fdcId:'169228',notes:''},
+  {id:'okra',name:'Okra',group:'Vegetables',kcal:33,protein:1.9,fibre:3.2,water:90,satietyEvidence:'Indirect',cost:'Unknown',availability:'Very good (local)',fdcId:'169260',notes:'Viscous soluble fibre, same class as psyllium.'},
+  {id:'guava',name:'Guava',group:'Fruits',kcal:68,protein:2.6,fibre:5.4,water:81,satietyEvidence:'Indirect',cost:'Unknown',availability:'Good (local)',fdcId:'173044',notes:'Highest fibre of the common fruits here.'},
+  {id:'papaya',name:'Papaya',group:'Fruits',kcal:43,protein:0.5,fibre:1.7,water:88,satietyEvidence:'Indirect',cost:'Estimated $1.00/fruit',availability:'Excellent',fdcId:'169926',notes:''},
+  {id:'orange',name:'Orange',group:'Fruits',kcal:47,protein:0.9,fibre:2.4,water:87,satietyEvidence:'Direct RCT',cost:'Estimated $1.00/kg',availability:'Excellent',fdcId:'169097',notes:'Whole oranges scored high on the satiety index.'},
+  {id:'banana',name:'Banana',group:'Fruits',kcal:89,protein:1.1,fibre:2.6,water:75,satietyEvidence:'Direct RCT',cost:'Estimated $0.50/5 pieces',availability:'Excellent',fdcId:'173944',notes:'Moderate satiety index.'},
+  {id:'egg',name:'Egg, whole, raw',group:'Protein',kcal:143,protein:12.6,fibre:0,water:76,satietyEvidence:'Direct RCT',cost:'Estimated $1.90–2.40/dozen',availability:'Excellent',fdcId:'171287',notes:'Protein breakfast reduces later intake.'},
+  {id:'chicken-breast',name:'Chicken Breast, roasted',group:'Protein',kcal:165,protein:31.0,fibre:0,water:65,satietyEvidence:'Direct RCT',cost:'Estimated $3.90–5.10/kg',availability:'Excellent',fdcId:'171477',notes:'Highest protein density of meats.'},
+  {id:'cod',name:'Cod, cooked',group:'Protein',kcal:105,protein:22.8,fibre:0,water:80,satietyEvidence:'Direct RCT',cost:'Unknown; local reef fish cheaper',availability:'Excellent (local)',fdcId:'171956',notes:'High satiety-index score.'},
+  {id:'lentils',name:'Lentils, cooked',group:'Protein',kcal:116,protein:9.0,fibre:7.9,water:69,satietyEvidence:'Direct RCT',cost:'Unknown — dry cheap if stocked',availability:'Moderate–good',fdcId:'172421',notes:'Pulses reduce appetite vs control.'},
+  {id:'chickpeas',name:'Chickpeas, cooked',group:'Protein',kcal:164,protein:8.9,fibre:7.6,water:60,satietyEvidence:'Direct',cost:'Unknown',availability:'Moderate',fdcId:'173799',notes:'Pulse class.'},
+];
+
+const MEALS = [
+  {id:'b1',title:'3 eggs + 200 g Greek yoghurt + 40 g oats + berries',type:'Breakfast',protein:'~40 g',fibre:'~8 g',notes:'The default breakfast.',ingredients:['3 eggs','200 g Greek yoghurt','40 g oats','berries']},
+  {id:'b2',title:'Overnight oats',type:'Breakfast',protein:'~45 g',fibre:'~9 g',notes:'60 g oats + 250 ml milk + 200 g yoghurt + 1 scoop whey + cinnamon. 2 min prep night before.',ingredients:['60 g oats','250 ml milk','200 g yoghurt','1 scoop whey','cinnamon']},
+  {id:'b3',title:'Cottage cheese bowl',type:'Breakfast',protein:'~35 g',fibre:'~6 g',notes:'250 g cottage cheese + fruit + 30 g nuts. No cooking.',ingredients:['250 g cottage cheese','fruit','30 g nuts']},
+  {id:'l1',title:'Chicken + rice + frozen veg',type:'Lunch/Dinner',protein:'~50 g',fibre:'~10 g',notes:'200 g chicken, 200 g cooked rice, 250 g vegetables, 1 tbsp olive oil. The workhorse.',ingredients:['200 g chicken','200 g cooked rice','250 g frozen vegetables','1 tbsp olive oil']},
+  {id:'l2',title:'Lentil/chickpea stew',type:'Lunch/Dinner',protein:'~25 g',fibre:'~15 g',notes:'250 g cooked legumes + 150 g rice + vegetables + spices. Cheapest meal.',ingredients:['250 g cooked legumes','150 g rice','vegetables','spices']},
+  {id:'l3',title:'Canned fish plate',type:'Lunch/Dinner',protein:'~45 g',fibre:'~8 g',notes:'2 tins sardines/tuna + 2 slices bread + salad + olive oil. No cooking.',ingredients:['2 tins sardines/tuna','2 slices bread','salad','olive oil']},
+  {id:'s1',title:'300 ml milk + fruit',type:'Snack',protein:'~15 g',fibre:'~3 g',notes:'',ingredients:['300 ml milk','fruit']},
+  {id:'s2',title:'200 g cottage cheese',type:'Snack',protein:'~25 g',fibre:'~0 g',notes:'',ingredients:['200 g cottage cheese']},
+  {id:'s3',title:'2 boiled eggs',type:'Snack',protein:'~12 g',fibre:'~0 g',notes:'',ingredients:['2 eggs']},
+];
+
+const SHOPPING = [
+  {cat:'Protein',items:[['Eggs','18–24'],['Milk','2–3 L'],['Plain yoghurt/cottage cheese','1 kg'],['Chicken or tofu','1.5 kg'],['Canned fish','4–6 tins'],['Lentils/chickpeas','500 g dry or 4 tins'],['Whey (optional)','1 tub']]},
+  {cat:'Fibre/Veg',items:[['Oats','1 kg'],['Frozen mixed vegetables','1.5 kg'],['Cabbage/carrots','as needed'],['Tomatoes/cucumber','as needed'],['Onions/garlic','as needed'],['Seasonal fruit','2 kg'],['Potatoes or rice','1–2 kg']]},
+  {cat:'Fats/Flavour',items:[['Olive oil','1 bottle'],['Spices, salt, vinegar, mustard, herbs','as needed']]},
+];
+
+// ============ STATE ============
+let state = {
+  section:'home',
+  category:'all',
+  q:'',
+  sort:'default',
+  evidence:'',
+  cost:'',
+  verified:false,
+};
+
+// ============ RENDERERS ============
+const $ = (sel)=>document.querySelector(sel);
+const $$ = (sel)=>Array.from(document.querySelectorAll(sel));
+
+function badgeFor(v){
+  const b={High:'badge-high','Moderate-High':'badge-high','Moderate':'badge-mod','Low':'badge-low','Very low':'badge-low','Insufficient':'badge-low'}[v]||'badge-low';
+  return `<span class="badge ${b}">${v}</span>`;
+}
+function essentialBadge(p){
+  const b={essential:'badge-essential','high-value':'badge-highval',optional:'badge-optional',skip:'badge-skip'}[p.essential]||'badge-optional';
+  const l={essential:'Essential','high-value':'High value',optional:'Optional',skip:'Skip'}[p.essential];
+  return `<span class="badge ${b}">${l}</span>`;
+}
+
+function renderCategoryTabs(){
+  const wrap=$('#tabScroll');
+  wrap.innerHTML='';
+  const all=document.createElement('div');
+  all.className='tab active';
+  all.innerHTML='<span class="dot"></span>All';
+  all.onclick=()=>setState({category:'all'});
+  wrap.appendChild(all);
+  CATEGORIES.forEach(c=>{
+    const el=document.createElement('div');
+    el.className='tab';
+    el.innerHTML='<span class="dot"></span>'+c.title;
+    el.onclick=()=>setState({category:c.id});
+    wrap.appendChild(el);
+  });
+}
+
+function renderSortTabs(){
+  const wrap=$('#sortWrap');
+  const sorts=[{id:'default',label:'Default'},{id:'evidence',label:'Evidence'},{id:'cost',label:'Cost low→high'},{id:'name',label:'Name A→Z'}];
+  wrap.innerHTML='';
+  sorts.forEach(s=>{
+    const el=document.createElement('div');
+    el.className='sort-pill'+(state.sort===s.id?' active':'');
+    el.textContent=s.label;
+    el.onclick=()=>setState({sort:s.id});
+    wrap.appendChild(el);
+  });
+}
+
+function renderFilterChips(){
+  const catMap={all:'All'};
+  CATEGORIES.forEach(c=>catMap[c.id]=c.title);
+  $('#catChips').innerHTML=Object.entries(catMap).map(([id,label])=>
+    `<div class="chip ${state.category===id?'active':''}" onclick="setState({category:'${id}'})">${label}</div>`).join('');
+  const evs=['','High','Moderate-High','Moderate','Low','Very low','Insufficient'];
+  $('#evChips').innerHTML=evs.map(v=>{
+    const lbl=v||'Any grade';
+    return `<div class="chip ${state.evidence===v?'active':''}" onclick="setState({evidence:'${v}'})">${lbl}</div>`;
+  }).join('');
+  const costs=['','Free','Very low','Low','Moderate','High','Very high'];
+  $('#costChips').innerHTML=costs.map(v=>{
+    const lbl=v||'Any cost';
+    return `<div class="chip ${state.cost===v?'active':''}" onclick="setState({cost:'${v}'})">${lbl}</div>`;
+  }).join('');
+  const sw=$('#verifiedSwitch');
+  sw.className='switch'+(state.verified?' on':'');
+  sw.setAttribute('aria-checked',state.verified);
+  sw.onclick=()=>setState({verified:!state.verified});
+  const dot=$('#filterDot'); dot.className='active-dot'+(hasActiveFilters()?'':'');
+}
+
+function hasActiveFilters(){
+  return Boolean(state.evidence||state.cost||state.verified);
+}
+
+function applyFilters(){
+  closeSheet();
+}
+
+function resetFilters(){
+  setState({evidence:'',cost:'',verified:false,category:'all'});
+}
+
+function openSheet(){$('#filterSheet').classList.add('open');document.body.style.overflow='hidden'}
+function closeSheet(){$('#filterSheet').classList.remove('open');document.body.style.overflow=''}
+
+function setState(partial){
+  Object.assign(state,partial);
+  renderFilterChips();
+  renderSortTabs();
+  renderContent();
+  // update nav active
+  $$('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.section===state.section));
+}
+
+function filterItems(items){
+  return items.filter(it=>{
+    if(state.category!=='all' && it.categoryId!==state.category && it.category!==state.category) return false;
+    if(state.q){
+      const s=(it.title+' '+it.summary+(it.name||'')+(it.group||'')+(it.purpose||'')).toLowerCase();
+      if(!s.includes(state.q.toLowerCase())) return false;
+    }
+    if(state.evidence && it.evidenceGrade!==state.evidence) return false;
+    if(state.cost && it.costTier!==state.cost) return false;
+    if(state.verified && it.priceVerified===false) return false;
+    return true;
+  });
+}
+
+function sortItems(items){
+  const s=[...items];
+  switch(state.sort){
+    case 'evidence': s.sort((a,b)=>{const o={High:5,'Moderate-High':4,Moderate:3,Low:2,'Very low':1,Insufficient:0};return (o[b.evidenceGrade]||0)-(o[a.evidenceGrade]||0);});break;
+    case 'cost': s.sort((a,b)=>{const o={Free:0,'Very low':1,Low:2,Moderate:3,High:4,'Very high':5};return (o[a.costTier]||0)-(o[b.costTier]||0);});break;
+    case 'name': s.sort((a,b)=>(a.title||a.name).localeCompare(b.title||b.name));break;
+  }
+  return s;
+}
+
+function renderHome(){
+  const featured=ARTICLES.filter(a=>a.fileId==='00'||a.fileId==='02'||a.fileId==='16');
+  const topProds=PRODUCTS.filter(p=>p.essential==='essential'||p.essential==='high-value').slice(0,4);
+  const cats=CATEGORIES.slice(0,6);
+  let html=`
+  <div class="grid gap-3" style="display:grid;grid-template-columns:1fr;">
+    <section class="mb-6">
+      <div class="flex items-center justify-between mb-3"><span class="section-label">Featured articles</span><a href="#" onclick="setState({section:'home'})">View all</a></div>
+      <div style="display:grid;gap:10px">${featured.map(a=>articleCard(a)).join('')}</div>
+    </section>
+    <section class="mb-8">
+      <div class="flex items-center justify-between mb-3"><span class="section-label">Top products</span><a href="#" onclick="setState({section:'products'})">View directory</a></div>
+      <div style="display:grid;gap:10px">${topProds.map(p=>productCard(p)).join('')}</div>
+    </section>
+    <section>
+      <span class="section-label">Categories</span>
+      <div style="display:grid;gap:8px">${cats.map(c=>catCard(c)).join('')}</div>
+    </section>
+  </div>`;
+  return html;
+}
+
+function catCard(c){
+  return `<a href="#" onclick="setState({category:'${c.id}'})" class="card" style="text-decoration:none;color:inherit"><div class="card-body"><div class="row"><div><div class="card-title">${c.title}</div><div class="card-desc">${c.subtitle}</div></div><div style="font-size:1.5rem">${c.icon}</div></div></div></a>`;
+}
+
+function articleCard(a){
+  const url=`#article-${a.id}`;
+  return `<a href="${url}" class="card" style="text-decoration:none;color:inherit" onclick="setState({category:'${a.categoryId}'})"><div class="card-body"><div class="row" style="justify-content:flex-start;gap:10px;flex-wrap:wrap">${badgeFor(a.evidenceGrade)}<span class="badge" style="border-color:var(--border);color:var(--muted);font-size:0.65rem">${a.readTime}</span></div><div class="card-title mt-3" style="display:block">${a.title}</div><div class="card-desc mt-2">${a.summary}</div><div class="mt-3" style="font-size:0.75rem;color:var(--muted);display:flex;gap:6px;align-items:center"><span>File ${a.fileId}</span></div></div></a>`;
+}
+
+function productCard(p){
+  const priceText=p.price!==null?`$${p.price.toFixed(2)}`:'Price varies';
+  return `<a href="${p.url}" target="_blank" rel="noopener" class="card" style="text-decoration:none;color:inherit"><div class="card-body"><div class="row" style="flex-wrap:wrap;gap:8px"><span class="badge ${p.priceVerified?'badge-verified':'badge-link'}">${p.priceVerified?'✅ Verified':'Search link'}</span>${essentialBadge(p)}</div><div class="card-title mt-2">${p.name}</div><div class="card-desc mt-1">${p.brand} · ${p.category}</div><div class="price-row mt-2"><span class="price-big">${priceText}</span><span class="price-small">${p.currency}</span>${p.perServing?'<div class="per-serving">· '+p.perServing+'</div>':''}</div><div class="mt-2" style="font-size:0.78rem;color:var(--muted)">${p.purpose}</div></div></a>`;
+}
+
+function renderCategory(){
+  const cat=CATEGORIES.find(c=>c.id===state.category);
+  const arts=sortItems(filterItems(ARTICLES.filter(a=>a.categoryId===state.category)));
+  if(!cat){
+    return '<div class="empty"><div class="empty-icon">📄</div><div class="empty-title">Category not found</div><div class="empty-desc">Please choose a category from the tabs.</div></div>';
+  }
+  let html=`
+  <div class="card mb-4" style="overflow:hidden">
+    <div class="card-body" style="padding:18px 16px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px"><div style="font-size:1.7rem">${cat.icon}</div><div><div class="card-title">${cat.title}</div><div class="card-desc">${cat.subtitle}</div></div></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${cat.files.map(f=>`<span class="badge" style="border-color:var(--border);color:var(--muted);font-size:0.65rem">File ${f}</span>`).join('')}</div>
+    </div>
+  </div>
+  ${arts.length?arts.map(a=>articleCard(a)).join(''):'<div class="empty"><div class="empty-icon">📭</div><div class="empty-title">No articles</div><div class="empty-desc">No articles match your filters.</div></div>'}`;
+  return html;
+}
+
+function renderProducts(){
+  let items=sortItems(filterItems(PRODUCTS));
+  let html=`
+  <div class="card mb-4"><div class="card-body" style="padding:16px"><div class="card-title">Product Directory</div><div class="card-desc">Verified links, prices & cost-per-serving. ✅ = price checked live on 1 Nov 2026 from iHerb; everything else is a marketplace search link.</div></div></div>
+  <div style="display:grid;gap:10px">${items.map(p=>productCard(p)).join('')||'<div class="empty"><div class="empty-icon">📦</div><div class="empty-title">No products</div><div class="empty-desc">No products match your filters.</div></div>'}</div>`;
+  return html;
+}
+
+function renderProductDetail(id){
+  const p=PRODUCTS.find(x=>x.id===id);
+  if(!p) return '<div class="empty"><div class="empty-icon">📦</div><div class="empty-title">Product not found</div></div>';
+  const priceText=p.price!==null?`$${p.price.toFixed(2)}`:'Price varies';
+  return `
+  <a href="${p.url}" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:16px" class="btn btn-primary">Open on ${p.source}</a>
+  <div class="card mb-4"><div class="card-body" style="padding:18px 16px">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div><div class="card-title">${p.name}</div><div class="card-desc">${p.brand} · ${p.category}</div></div>
+      <div style="font-size:1.5rem">${p.price!==null?'💰':'🔗'}</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"><span class="badge ${p.priceVerified?'badge-verified':'badge-link'}">${p.priceVerified?'✅ Price verified':'Marketplace search link'}</span>${essentialBadge(p)}</div>
+    <div class="price-row" style="margin-bottom:8px"><span class="price-big">${priceText}</span><span class="price-small">${p.currency}</span></div>
+    ${p.perServing?`<div class="per-serving">${p.perServing}</div>`:''}
+    <div class="divider"></div>
+    <div style="margin-top:8px"><div class="sheet-label" style="margin-bottom:6px">Purpose</div><p style="font-size:0.9rem">${p.purpose}</p></div>
+    <div class="sheet-label" style="margin-top:12px;margin-bottom:6px">How to use</div><p style="font-size:0.9rem">${p.use}</p>
+    <div class="sheet-label" style="margin-top:12px;margin-bottom:6px">Evidence</div><span class="badge ${badgeFor(p.evidence).split(' ')[1]}">${p.evidence}</span>
+    <div class="sheet-label" style="margin-top:12px;margin-bottom:6px">Risks</div><ul style="font-size:0.9rem;color:var(--muted);padding-left:18px;margin-top:4px">${p.risks.map(r=>`<li>${r}</li>`).join('')}</ul>
+    <div class="sheet-label" style="margin-top:12px;margin-bottom:6px">Contraindications</div><ul style="font-size:0.9rem;color:var(--muted);padding-left:18px;margin-top:4px">${p.contraindications.map(c=>`<li>${c}</li>`).join('')}</ul>
+    <p style="margin-top:16px;font-size:0.75rem;color:var(--muted)">Price date: ${p.priceDate}. Prices change constantly — treat as cost ranking, not a quote.</p>
+  </div></div>`;
+}
+
+function renderFoods(){
+  const groups=[...new Set(FOODS.map(f=>f.group))];
+  let html='<div style="display:flex;gap:6px;overflow-x:auto;margin-bottom:12px">';
+  groups.forEach(g=>{
+    html+=`<div class="chip ${state.activeFoodGroup===g?'active':''}" onclick="setState({activeFoodGroup:'${g}'})">${g}</div>`;
+  });
+  html+='</div>';
+  const g=state.activeFoodGroup||groups[0];
+  const items=FOODS.filter(f=>f.group===g);
+  html+=items.map(f=>`
+  <a href="https://fdc.nal.usda.gov/food-search?query=${f.fdcId}" target="_blank" rel="noopener" class="food" style="text-decoration:none;color:inherit">
+    <div class="food-info"><div style="display:flex;align-items:baseline;gap:6px"><div class="food-name">${f.name}</div><div class="food-group">${f.group}</div></div><div class="food-stats"><div><b>${f.kcal}</b> kcal</div><div><b>${f.protein}g</b> P</div><div><b>${f.fibre}g</b> F</div><div><b>${f.water}%</b> W</div></div>${f.notes?`<div class="food-notes">${f.notes}</div>`:''}</div>
+    <div class="food-side"><span class="badge ${f.satietyEvidence==='Direct RCT'?'badge-high':f.satietyEvidence==='Indirect'?'badge-mod':'badge-low'}">${f.satietyEvidence}</span><div class="food-cost">${f.cost}</div></div>
+  </a>`).join('');
+  return html;
+}
+
+function renderMeals(){
+  const types=[...new Set(MEALS.map(m=>m.type))];
+  let html='<div style="display:flex;gap:6px;overflow-x:auto;margin-bottom:12px">';
+  types.forEach(t=>{
+    html+=`<div class="chip ${state.activeMealType===t?'active':''}" onclick="setState({activeMealType:'${t}'})">${t}</div>`;
+  });
+  html+='</div>';
+  const t=state.activeMealType||types[0];
+  const items=MEALS.filter(m=>m.type===t);
+  html+=items.map(m=>`
+  <div class="card mb-3" style="overflow:hidden">
+    <div class="meal-head"><span class="meal-type">${m.type}</span>${essentialBadge({essential:'high-value'})}</div>
+    <div class="meal-title">${m.title}</div>
+    <div class="meal-body"><div class="meal-meta"><span class="badge badge-high">${m.protein} P</span><span class="badge badge-mod">${m.fibre} F</span></div>${m.notes?`<div class="meal-notes">${m.notes}</div>`:''}<div class="ingredients">${m.ingredients.map(i=>`<span class="ing">${i}</span>`).join('')}</div></div>
+  </div>`).join('');
+  return html;
+}
+
+function renderContent(){
+  const c=$('#content');
+  let html='';
+  switch(state.section){
+    case 'home': html=renderHome();break;
+    case 'products': html=renderProducts();break;
+    case 'foods': html=renderFoods();break;
+    case 'meals': html=renderMeals();break;
+    default:
+      if(state.category!=='all') html=renderCategory();
+      else html=renderHome();
+  }
+  c.innerHTML=html;
+}
+
+// ============ INIT ============
+function init(){
+  renderCategoryTabs();
+  renderSortTabs();
+  renderFilterChips();
+  renderContent();
+
+  // Search
+  const search=$('#search');
+  const clear=$('#clearSearch');
+  search.addEventListener('input',(e)=>{setState({q:e.target.value});clear.className=e.target.value?'clear-btn visible':'clear-btn'});
+  clear.addEventListener('click',()=>{search.value='';setState({q:''});clear.className='clear-btn'});
+
+  // Filters sheet
+  $('#filterBtn').onclick=openSheet;
+  $('#sheetBackdrop').onclick=closeSheet;
+  $('#sheetClose').onclick=closeSheet;
+  $('#applyFilters').onclick=applyFilters;
+  $('#resetFilters').onclick=resetFilters;
+
+  // Bottom nav
+  $$('.nav-item').forEach(el=>{
+    el.onclick=(e)=>{e.preventDefault();setState({section:el.dataset.section});window.scrollTo(0,0)};
+  });
+
+  // Theme
+  const toggle=$('#themeToggle');
+  const dark=localStorage.getItem('theme')==='dark'||(!localStorage.getItem('theme')&&window.matchMedia('(prefers-color-scheme:dark)').matches);
+  if(dark){document.documentElement.classList.add('dark');toggle.textContent='☀️'}
+  toggle.onclick=()=>{
+    const isDark=document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme',isDark?'dark':'light');
+    toggle.textContent=isDark?'☀️':'🌙';
+  };
+}
+
+window.setState=setState;
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
