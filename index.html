@@ -598,15 +598,20 @@ function renderMeals(){
 function renderContent(){
   const c=$('#content');
   let html='';
-  switch(state.section){
-    case 'home': html=renderHome();break;
-    case 'products': html=renderProducts();break;
-    case 'foods': html=renderFoods();break;
-    case 'meals': html=renderMeals();break;
-    default:
-      if(state.category!=='all') html=renderCategory();
-      else html=renderHome();
+  
+  // If category filter is active, render category content
+  if(state.category !== 'all') {
+    html = renderCategory();
+  } else {
+    switch(state.section){
+      case 'home': html=renderHome();break;
+      case 'products': html=renderProducts();break;
+      case 'foods': html=renderFoods();break;
+      case 'meals': html=renderMeals();break;
+      default: html=renderHome();break;
+    }
   }
+  
   c.innerHTML=html;
 }
 
@@ -632,7 +637,7 @@ function init(){
 
   // Bottom nav
   $$('.nav-item').forEach(el=>{
-    el.onclick=(e)=>{e.preventDefault();setState({section:el.dataset.section});window.scrollTo(0,0)};
+    el.onclick=(e)=>{e.preventDefault();setState({section:el.dataset.section, category: state.category});window.scrollTo(0,0)};
   });
 
   // Theme
