@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "test": "node scripts/check-data.mjs",
-    "test:queries": "node scripts/check-queries.mjs"
+    "test:queries": "node scripts/check-queries.mjs",
+    "test:standalone": "node scripts/check-standalone-data.mjs",
+    "test:all": "npm run test && npm run test:queries && npm run test:standalone"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.3.1",

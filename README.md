@@ -1,102 +1,120 @@
 # GlowUp — Men's Transformation Research Library
 
-A mobile-first, modern web app assembled from the Men's Transformation Research Library MD files. Features categories, sort tabs, filters, toggles, products, foods, meal templates, and search — all free and fast.
+A mobile-first research library and PWA. Category tabs → sub-tabs, sort tabs, filters and
+live search across articles, products, foods and meals.
 
-## What's in this folder
-
-| File | Purpose |
-|------|---------|
-| `index.html` | **Standalone zero-dependency version** — open this directly in any browser, no install needed. PWA-ready. |
-| `app/`, `components/`, `lib/` | **Next.js 15 version** — modern React stack (requires `npm install`). |
-| `package.json` | Next.js project manifest. |
-| `manifest.json` | PWA manifest (installable on Android/iOS). |
-
-## Quick start — use right now (no install)
-
-Open `index.html` in any browser. It works offline after first load (PWA) and includes:
-
-- **Category tabs** — horizontal scrollable tabs for Fat Loss, Muscle & Training, Nutrition & Foods, Supplements, Product Directory, Skincare & Grooming, Sleep & Recovery, Health & Longevity, Maintenance, Myths & Evidence, Master Summary.
-- **Sort tabs** — Default / Evidence / Cost (low→high) / Name (A→Z).
-- **Filters** — category, evidence grade, cost tier, and a "Verified prices only" toggle.
-- **Search** — live search across articles, products, foods, and meals.
-- **Products** — verified iHerb prices (✅ checked 1 Nov 2026) with cost-per-serving, evidence, purpose, usage, risks, contraindications, and essential/high-value/optional tags.
-- **Foods** — USDA FoodData Central nutrition tables (kcal, protein, fibre, water per 100 g) with satiety evidence and Mogadishu cost/availability.
-- **Meals** — breakfast / lunch-dinner / snack templates with protein & fibre, ingredients, and a weekly shopping list.
-- **Dark mode toggle** — persists your preference.
-
-## Next.js version (modern stack)
-
-The `app/`, `components/`, and `lib/` folders contain a full Next.js 15 + TypeScript + Tailwind app. To run it:
-
-```bash
-cd glowup-app
-npm install        # requires network access to the npm registry
-npm run dev        # starts dev server on http://localhost:3000
-npm run build      # production build
-npm start          # serve production build
-npm test           # data-consistency check (categories / sub-tabs / icons)
-npm run test:queries  # sort / filter / search / markdown renderer checks
-```
-
-### Tech stack
-- **Next.js 15** (App Router, React 19)
-- **TypeScript**
-- **Tailwind CSS**
-- **shadcn/ui** primitives (Radix UI based)
-- **Lucide React** icons
-- **next-themes** (dark mode)
-
-### Navigation hierarchy
-
-| Tier | Control | State |
-|------|---------|-------|
-| 1 | Bottom nav: Home, Categories, Products, Foods, Meals + theme toggle | route path |
-| 2 | Category tab bar (`components/category-tabs.tsx`) | `?category=<id>` |
-| 3 | Sub-tab bar (`components/sub-tabs.tsx`) | `?tab=<id>` |
-
-All list state lives in the query string, so every view is shareable and survives a reload:
-
-- `?category=` — category (tier 2)
-- `?tab=` — sub-tab within a category (tier 3); cleared automatically when the category changes
-- `?sort=` — `default` · `evidence` · `cost` · `name`
-- `?evidence=` — evidence grade
-- `?cost=` — cost tier
-- `?verified=true` — verified prices only
-- `?q=` — free-text search across articles, products, foods and meals
-
-### Routes
-- `/` — Home: featured decks (Big D, Sleep & Recovery), all 12 categories, sortable/filterable library, and a cross-entity search view when `?q=` is set
-- `/categories` — index of all 12 categories with their sub-sections
-- `/categories/[slug]` — Category detail: sub-tabs + live article list
-- `/articles/[id]` — Article reader (markdown rendered by `lib/markdown.ts`)
-- `/products` — Product directory with filters & sort
-- `/products/[id]` — Product detail page
-- `/foods` — High-volume low-calorie food tables
-- `/meals` — Meal templates + weekly shopping list
-
-## Data sources
-
-All content is assembled from the MD files in `research_library_md/`:
-
-- **Articles** — 39 files (00–26 Phase 1 + Phase 2 modules)
-- **Products** — File 18 (Product Directory) with verified iHerb prices from 1 Nov 2026
-- **Foods** — File 01 (High-Volume Low-Calorie Foods) USDA FDC nutrition tables
-- **Meals** — File 26 (Meal Templates & Food List)
-
-## Deploy (free)
-
-- **Vercel**: push to GitHub, import repo, deploy (free tier). Note: the repo still ships a
-  legacy `vercel.json` that builds the standalone `index.html` — delete it (or drop the
-  `builds`/`routes` blocks) so Vercel uses the Next.js build output in `.next/`.
-- **Netlify / GitHub Pages**: serve the standalone `index.html` build.
-
-> Before committing, add `node_modules/`, `.next/`, `.next-env.d.ts`, `tsconfig.tsbuildinfo`
-> and `.shots/` to `.gitignore` — the current file only ignores `.vercel`.
-
-## Android (Capacitor) — optional
-
-The standalone `index.html` can be wrapped with Capacitor (per `GLOWUP_BUILD_INSTRUCTIONS.md`) to produce a real APK. The Next.js build output (`npm run build` → `.next`) can also be served as a PWA.
+**Live:** https://glowup-pwa.vercel.app
 
 ---
 
-Built from the Men's Transformation Research Library — evidence-graded, no supplements sold, no affiliate links. Prices are cost rankings, not quotes.
+## Two apps, one repo
+
+| Path | What it is | How to run |
+|---|---|---|
+| `app/`, `components/`, `lib/` | **Next.js 15 app** — the primary site. React 19, TypeScript, Tailwind. | `npm install && npm run dev` |
+| `public/standalone/index.html` | **Standalone build** — one self-contained file, zero dependencies, no build step. Served at `/standalone`. | open it in a browser |
+
+The standalone build is a real deployment target, not a leftover: it works offline after the
+first load, installs as a PWA, and needs no npm install.
+
+---
+
+## Quick start
+
+```bash
+npm install
+npm run dev        # http://localhost:3000
+```
+
+```bash
+npm run build      # next build — 55 static pages
+npm start          # serve the production build
+```
+
+### The standalone build
+
+Open `public/standalone/index.html` directly in any browser. No install, no server, no build.
+
+---
+
+## Scripts
+
+| Script | What it checks |
+|---|---|
+| `npm test` | Catalogue invariants: every category has sub-tabs, every article sits in exactly one sub-tab of its own category, sub-tab lists match the articles claiming them, every icon resolves to a real lucide export. **291 assertions.** |
+| `npm run test:queries` | The filter/sort/search layer. **32 expectations.** |
+| `node scripts/check-standalone-data.mjs` | The standalone build's catalogue and shell — that the stylesheet is intact, the CSS tokens are defined, and the same sub-tab invariants hold. |
+| `node scripts/verify-ui.mjs` | End-to-end UI check in headless Edge against a running server: category tab filters the list, `?tab=` narrows to one article, ArrowRight/Enter move and select sub-tabs, `?sort=`/`?evidence=`/`?q=` apply, switching category clears `?tab=` but keeps sort and filters, exactly one nav item is active per route. Needs `npm i --no-save puppeteer-core` and a server on `:3000` (`BASE_URL` overrides it). |
+
+---
+
+## Navigation model
+
+```
+Tier 1   bottom nav      Home · Categories · Products · Foods · Meals
+Tier 2   category tabs   13 categories, horizontally scrollable
+Tier 3   sub-tabs        per category, from Category.subTabs in lib/data/categories.ts
+Tier 4   sort / filter   evidence grade, cost tier, verified prices, 4 sort orders
+```
+
+Sub-tabs are data, not markup — add one to `lib/data/categories.ts` and it appears in the UI.
+Every article carries a `subTabId`, and `npm test` fails if an article is orphaned or claimed
+twice.
+
+### Categories
+
+Fat Loss · Muscle & Training · Nutrition & Foods · Supplements · Product Directory ·
+Skincare & Grooming · **Sleep & Recovery** · **Big D — Men's Vitality** · Health & Longevity ·
+Maintenance · Myths & Evidence · Master Summary
+
+**Big D** is the men's vitality guide: sexual function, premature ejaculation, fertility,
+attraction and low testosterone, each with its own sub-tab and a full article body. It was
+ported from the GlowUp PWA ebook (`index.html#h-bigd` on the `master` branch).
+
+---
+
+## Adding content
+
+Articles live in `lib/data/articles.ts`; the Big D and Sleep articles are in
+`lib/data/vitality.ts` and `lib/data/sleep.ts`. Each article carries a `subTabId` pointing at
+a sub-tab of its own category.
+
+The narrative source for every section is the research library in `research_library_md/`
+(`00`–`27`), including `27_BIG_D_MENS_VITALITY.md` — the Big D guide with per-section
+evidence grading and an explicit list of claims that are **not verified** in that library.
+
+---
+
+## Deployment
+
+`vercel.json` declares `"framework": "nextjs"` with security headers only, so Vercel runs a
+normal Next.js build. `.vercelignore` excludes `node_modules`, `.next`, `.env` and logs.
+
+The standalone build is served from `public/standalone/`, with the PWA manifest and icons at
+the root.
+
+> **Note:** Vercel Authentication (SSO protection) is enabled by default on projects in the
+> `bahjudiin1-2344s-projects` scope. If a deployment comes back `Ready` but every request
+> redirects to a Vercel login page, clear it:
+> `PATCH /v9/projects/glowup-pwa` with `{"ssoProtection": null, "passwordProtection": null}`.
+
+---
+
+## Evidence conventions
+
+- Nutrition values are USDA FoodData Central SR Legacy, per 100 g. Values are ±10–15% versus
+  local Somali produce.
+- iHerb prices marked ✅ were checked live on **1 Nov 2026**; they exclude international
+  shipping, customs and local markup. Marketplace **search** links are labelled as such — no
+  product URLs were invented.
+- Every important claim links to PubMed. Mechanistic findings are never presented as proof
+  of real-world outcomes. Claims that could not be verified are labelled as such.
+
+---
+
+## Disclaimer
+
+Research synthesis for information only — not medical advice. Persistent sexual-function
+problems, fertility questions and hormone concerns need a clinician; erectile dysfunction
+and low libido are frequently the first presentation of diabetes, hypertension, cardiovascular
+disease, endocrine disease or sleep apnoea.
