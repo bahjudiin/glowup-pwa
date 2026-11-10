@@ -1,55 +1,66 @@
-# Deploy GlowUp to Vercel
+# Deploying GlowUp
 
-## Option A: GitHub + Vercel Dashboard (Recommended — no CLI needed)
+**Live:** https://glowup-pwa.vercel.app
 
-Since `npm install` is blocked in this environment, deploy the **standalone static site** (`index.html`) via the Vercel web dashboard:
-
-1. **Push to GitHub**
-   ```bash
-   cd glowup-app
-   git init
-   git add .
-   git commit -m "Initial GlowUp app"
-   # Create a repo on GitHub, then:
-   git remote add origin https://github.com/YOUR_USERNAME/glowup.git
-   git branch -M main
-   git push -u origin main
-   ```
-
-2. **Import in Vercel**
-   - Go to https://vercel.com/dashboard
-   - Click **"Add New Project"**
-   - Import your `glowup` repository
-   - Framework preset: **"Other"**
-   - Build command: (leave blank / none)
-   - Output directory: `.` (root)
-   - Click **Deploy**
-
-3. **Done** — your app is live at `https://glowup.vercel.app`
-
-## Option B: Vercel CLI (if you have network access locally)
-
-If you can run npm on your own machine:
+## One-command deploy
 
 ```bash
-cd glowup-app
-npm install -g vercel
-vercel login
-vercel --prod
+git checkout main
+npm install
+vercel --prod --yes
 ```
 
-## What gets deployed
+The Vercel CLI is already authenticated on this machine as `bahjudiin1-2344`, and the
+project is linked to this repository with **`main` as the production branch** — so a
+`git push` to `main` also triggers a deploy.
 
-The standalone `index.html` version — a full mobile-first app with:
-- Category tabs, sort tabs, filters, toggles
-- Search across articles, products, foods, meals
-- Product directory with verified iHerb prices
-- USDA food nutrition tables
-- Meal templates + weekly shopping list
-- PWA manifest (installable on Android/iOS)
-- Dark mode
+## What is deployed
 
-## Notes
+| Route | What it is |
+|---|---|
+| `/` | The Next.js 15 app — categories → sub-tabs, sort tabs, filters, search, article reader |
+| `/categories`, `/categories/[slug]` | Category index and per-category view with tier-3 sub-tabs |
+| `/articles/[id]` | Full article, rendered from markdown |
+| `/products`, `/foods`, `/meals` | Catalogue, USDA food tables, meal templates |
+| `/standalone` | The zero-dependency single-file build (no npm install needed) |
+| `/manifest.json`, `/icon-*.png` | PWA manifest and icons, served from `public/` |
 
-- The Next.js 15 version in `/app`, `/components`, `/lib` requires `npm install` to build — deploy it to Vercel via the Next.js framework preset if you can run `npm install` locally.
-- The static `index.html` is what's configured in `vercel.json` above and works immediately on Vercel's free Hobby tier.
+## Configuration
+
+- `vercel.json` sets `"framework": "nextjs"` plus security headers. It does **not**
+  declare `builds`/`routes` — those would override framework detection and break the
+  Next.js build.
+- `.vercelignore` excludes `node_modules`, `.next`, `.env` and logs only. It must not
+  exclude `app/`, `components/` or `lib/`.
+- `next.config.ts` must not require network access at build time. The app uses a local
+  font stack rather than `next/font/google` for exactly this reason.
+- Node 26.x is selected for the project.
+
+## Traps hit before
+
+**Vercel Authentication (SSO protection).** Projects in the `bahjudiin1-2344s-projects`
+scope get `ssoProtection` enabled by default. The deployment reports `Ready` but every
+request redirects to a Vercel login page. Clear it:
+
+```bash
+# PATCH /v9/projects/glowup-pwa?teamId=<team>  body: {"ssoProtection": null, "passwordProtection": null}
+```
+
+**Static assets 404.** The PWA manifest and icons must live in `public/` so Next.js serves
+them at the root. Copies at the repository root are never served.
+
+**`npm install` blocked locally.** That was a limitation of the machine that first built
+this, not of Vercel. Vercel runs a normal `npm install` in its own build container.
+
+## Verifying a deploy
+
+```bash
+npm run test:all        # catalogue invariants
+npx tsc --noEmit        # types
+npm run build           # 55 static pages
+
+node scripts/verify-ui.mjs   # needs: npm i --no-save puppeteer-core, a server on :3000
+```
+
+`scripts/verify-ui.mjs` also accepts `BASE_URL=https://glowup-pwa.vercel.app` to check the
+live site.
