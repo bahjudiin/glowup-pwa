@@ -308,6 +308,7 @@ const catTabs = await page.$$eval('#screen-home .cat-tab', e => e.map(x => x.tex
 check('home has 2 category tabs', catTabs.length === 2 && /Health/.test(catTabs[0]) && /Grooming/.test(catTabs[1]), catTabs.join(' | '));
 const hStabs = await page.$$eval('#cat-health .stab', e => e.map(x => x.textContent.trim()));
 check('health has 5 sub-tabs', hStabs.length === 5, hStabs.join(' | '));
+check('Big D sub-tab is labelled and reachable', hStabs.some(s => /Big D/i.test(s)), hStabs.join(' | '));
 check('only one pane visible on home', (await page.$$eval('#screen-home .tab-pane', e => e.filter(x => x.style.display !== 'none').length)) === 1);
 
 // click every home sub-tab
