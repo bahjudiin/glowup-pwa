@@ -123,7 +123,7 @@ export const CATEGORIES: Category[] = [
     articleCount: 3,
   },
   {
-    id: 'mens-vitality',
+    // VITALITY_CATEGORY.id is already 'mens-vitality'
     ...VITALITY_CATEGORY,
   },
   {

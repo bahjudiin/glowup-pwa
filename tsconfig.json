@@ -26,9 +26,6 @@
     "paths": {
       "@/*": [
         "./*"
-      ],
-      "@/lib/data/vitality": [
-        "./components/data/vitality.ts"
       ]
     },
     "target": "ES2017"
