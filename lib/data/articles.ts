@@ -1,6 +1,8 @@
 import type { Article } from '@/lib/types';
+import { SLEEP_ARTICLES } from '@/lib/data/sleep';
+import { VITALITY_ARTICLES } from '@/lib/data/vitality';
 
-export const ARTICLES: Article[] = [
+const BASE_ARTICLES: Article[] = [
   // Master Summary
   {
     id: 'master-summary',
@@ -8,6 +10,7 @@ export const ARTICLES: Article[] = [
     summary:
       'The complete synthesis: hierarchy of what works, ranked intervention list, 16-week protocol, low-maintenance version, safety, products and final recommendations.',
     categoryId: 'master-summary',
+    subTabId: 'protocol',
     fileId: '00',
     evidenceGrade: 'High',
     costTier: 'Free',
@@ -24,6 +27,7 @@ export const ARTICLES: Article[] = [
     summary:
       '20–25% energy deficit, protein targets, expected rate of loss, adherence strategies and plateaus.',
     categoryId: 'fat-loss',
+    subTabId: 'deficit',
     fileId: '02',
     evidenceGrade: 'High',
     costTier: 'Free',
@@ -39,6 +43,7 @@ export const ARTICLES: Article[] = [
     summary:
       '16:8 vs 14:10 vs alternate-day fasting, evidence vs claims, autophagy myths and the least restrictive effective schedule.',
     categoryId: 'fat-loss',
+    subTabId: 'fasting',
     fileId: '04',
     evidenceGrade: 'Moderate',
     costTier: 'Free',
@@ -54,6 +59,7 @@ export const ARTICLES: Article[] = [
     summary:
       'The 16-week maximum-reasonable-speed protocol with deficit, training, cardio, sleep and exit strategy.',
     categoryId: 'fat-loss',
+    subTabId: 'deficit',
     fileId: '20',
     evidenceGrade: 'Moderate',
     costTier: 'Free',
@@ -70,6 +76,7 @@ export const ARTICLES: Article[] = [
     summary:
       'Protein 2.0–2.6 g/kg, resistance training, keeping muscle in a deficit and how to tell fat vs water vs muscle loss.',
     categoryId: 'muscle-training',
+    subTabId: 'recomposition',
     fileId: '03',
     evidenceGrade: 'High',
     costTier: 'Low',
@@ -85,6 +92,7 @@ export const ARTICLES: Article[] = [
     summary:
       'Fitness, strength, steps, NEAT, programmes, cardio and daily movement for fat loss and longevity.',
     categoryId: 'muscle-training',
+    subTabId: 'training',
     fileId: '10',
     evidenceGrade: 'High',
     costTier: 'Free',
@@ -100,6 +108,7 @@ export const ARTICLES: Article[] = [
     summary:
       'Ranked levers, protein target methods, minimum home training plan and deficit size for keeping muscle.',
     categoryId: 'muscle-training',
+    subTabId: 'recomposition',
     fileId: '06',
     evidenceGrade: 'High',
     costTier: 'Free',
@@ -116,6 +125,7 @@ export const ARTICLES: Article[] = [
     summary:
       'Tables of vegetables, fruits and protein foods ranked by volume per calorie, satiety evidence and Mogadishu cost/availability.',
     categoryId: 'nutrition-foods',
+    subTabId: 'volume',
     fileId: '01',
     evidenceGrade: 'Moderate-High',
     costTier: 'Very low',
@@ -131,6 +141,7 @@ export const ARTICLES: Article[] = [
     summary:
       'Protein targets, diet patterns, cost per gram of protein and food-form effects on satiety.',
     categoryId: 'nutrition-foods',
+    subTabId: 'protein',
     fileId: '08',
     evidenceGrade: 'High',
     costTier: 'Low',
@@ -146,6 +157,7 @@ export const ARTICLES: Article[] = [
     summary:
       'Ready-to-eat breakfast, lunch/dinner and snack templates, a 7-day rotation and a one-page weekly shopping list.',
     categoryId: 'nutrition-foods',
+    subTabId: 'meals',
     fileId: '26',
     evidenceGrade: 'Moderate-High',
     costTier: 'Low',
@@ -161,6 +173,7 @@ export const ARTICLES: Article[] = [
     summary:
       'Cheapest fiber and protein sources, psyllium, budget menus and low-cost satiety strategies.',
     categoryId: 'nutrition-foods',
+    subTabId: 'volume',
     fileId: '01',
     evidenceGrade: 'Moderate-High',
     costTier: 'Very low',
@@ -177,6 +190,7 @@ export const ARTICLES: Article[] = [
     summary:
       'Creatine, vitamin D, omega-3, magnesium, multivitamin — and every supplement not worth buying.',
     categoryId: 'supplements',
+    subTabId: 'evidence',
     fileId: '16',
     evidenceGrade: 'High',
     costTier: 'Low',
@@ -192,6 +206,7 @@ export const ARTICLES: Article[] = [
     summary:
       'GLP-1 drugs, bariatric surgery, clinics and what can or cannot be reproduced with lifestyle.',
     categoryId: 'supplements',
+    subTabId: 'alternatives',
     fileId: '17',
     evidenceGrade: 'High',
     costTier: 'Very high',
@@ -208,6 +223,7 @@ export const ARTICLES: Article[] = [
     summary:
       'Verified iHerb links and prices, cost-per-serving math, best free/budget/value/premium options and a do-not-buy list.',
     categoryId: 'products',
+    subTabId: 'catalogue',
     fileId: '18',
     evidenceGrade: 'High',
     costTier: 'Low',
@@ -223,6 +239,7 @@ export const ARTICLES: Article[] = [
     summary:
       'Free → cheap food → cheap tools → supplements priority order, verified iHerb prices and marketplace search links.',
     categoryId: 'products',
+    subTabId: 'shopping',
     fileId: '09',
     evidenceGrade: 'Moderate',
     costTier: 'Low',
@@ -239,6 +256,7 @@ export const ARTICLES: Article[] = [
     summary:
       'Sunscreen, retinoids, acne, pigmentation, devices and the best low-cost glow-up interventions for men.',
     categoryId: 'skincare-grooming',
+    subTabId: 'skincare',
     fileId: '14',
     evidenceGrade: 'High',
     costTier: 'Very low',
@@ -254,6 +272,7 @@ export const ARTICLES: Article[] = [
     summary:
       'Facial fat, teeth, hair, posture, clothing fit, fragrance and appearance interventions ranked by value.',
     categoryId: 'skincare-grooming',
+    subTabId: 'grooming',
     fileId: '15',
     evidenceGrade: 'Moderate',
     costTier: 'Low',
@@ -269,6 +288,7 @@ export const ARTICLES: Article[] = [
     summary:
       'Androgenetic alopecia treatment evidence, finasteride, minoxidil and safety for men.',
     categoryId: 'skincare-grooming',
+    subTabId: 'hair',
     fileId: '24',
     evidenceGrade: 'Moderate-High',
     costTier: 'Low',
@@ -278,37 +298,8 @@ export const ARTICLES: Article[] = [
     icon: 'Hair',
     content: '',
   },
-  // Sleep & Recovery
-  {
-    id: 'sleep-recovery',
-    title: 'Sleep & Recovery',
-    summary:
-      'Sleep evidence, CBT-I, recovery, sleep apnea screening and a protocol built for hot, noisy, late-eating cities.',
-    categoryId: 'sleep-recovery',
-    fileId: '11',
-    evidenceGrade: 'Moderate-High',
-    costTier: 'Free',
-    difficulty: 'Easy',
-    readTime: '8 min',
-    tags: ['sleep', 'CBT-I', 'apnea', 'recovery'],
-    icon: 'Moon',
-    content: '',
-  },
-  {
-    id: 'appetite-satiety',
-    title: 'Appetite & Satiety',
-    summary:
-      'Protein, fibre, food volume, sleep, water before meals and behavioural tools that reduce spontaneous intake 300–700 kcal/day.',
-    categoryId: 'sleep-recovery',
-    fileId: '05',
-    evidenceGrade: 'Moderate-High',
-    costTier: 'Free',
-    difficulty: 'Easy',
-    readTime: '7 min',
-    tags: ['appetite', 'satiety', 'hunger', 'behaviour'],
-    icon: 'Burner',
-    content: '',
-  },
+  // Sleep & Recovery articles live in lib/data/sleep.ts (they carry body content)
+  // Big D — Men's Vitality articles live in lib/data/vitality.ts
   // Health & Longevity
   {
     id: 'mens-health-longevity',
@@ -316,6 +307,7 @@ export const ARTICLES: Article[] = [
     summary:
       'Mortality levers, blood pressure, screening, testosterone, alcohol and the strongest health interventions.',
     categoryId: 'health-longevity',
+    subTabId: 'mens-health',
     fileId: '12',
     evidenceGrade: 'High',
     costTier: 'Free',
@@ -331,6 +323,7 @@ export const ARTICLES: Article[] = [
     summary:
       'A graded table of every popular longevity intervention — what works, what does not and what is insufficient.',
     categoryId: 'health-longevity',
+    subTabId: 'anti-aging',
     fileId: '13',
     evidenceGrade: 'Moderate',
     costTier: 'High',
@@ -346,6 +339,7 @@ export const ARTICLES: Article[] = [
     summary:
       'What to measure, when, how to interpret results and tracking tools for weight, waist and blood pressure.',
     categoryId: 'health-longevity',
+    subTabId: 'tracking',
     fileId: '25',
     evidenceGrade: 'Moderate',
     costTier: 'Low',
@@ -362,6 +356,7 @@ export const ARTICLES: Article[] = [
     summary:
       'The biology of regain, the maintenance protocol and the written 2-kg correction rule.',
     categoryId: 'maintenance',
+    subTabId: 'biology',
     fileId: '06',
     evidenceGrade: 'Moderate',
     costTier: 'Free',
@@ -377,6 +372,7 @@ export const ARTICLES: Article[] = [
     summary:
       'Early-warning system, disruption plans and how to reverse a small regain before it becomes a relapse.',
     categoryId: 'maintenance',
+    subTabId: 'prevention',
     fileId: '07',
     evidenceGrade: 'Moderate',
     costTier: 'Free',
@@ -392,6 +388,7 @@ export const ARTICLES: Article[] = [
     summary:
       'A 12-week post-diet transition playbook to lock in results and avoid rebound.',
     categoryId: 'maintenance',
+    subTabId: 'transition',
     fileId: '21',
     evidenceGrade: 'Moderate',
     costTier: 'Free',
@@ -408,6 +405,7 @@ export const ARTICLES: Article[] = [
     summary:
       'The auto-generated master reference index — 141 PMIDs and 45 URLs with full audit trail.',
     categoryId: 'myths-evidence',
+    subTabId: 'references',
     fileId: '22',
     evidenceGrade: 'High',
     costTier: 'Free',
@@ -423,6 +421,7 @@ export const ARTICLES: Article[] = [
     summary:
       'Myth-by-myth verdicts with evidence grades — starvation mode, spot reduction, detox, LED masks and more.',
     categoryId: 'myths-evidence',
+    subTabId: 'myths',
     fileId: '23',
     evidenceGrade: 'High',
     costTier: 'Free',
@@ -438,6 +437,7 @@ export const ARTICLES: Article[] = [
     summary:
       'How claims are graded (High/Moderate/Low/Very low/Insufficient), verification method and limitations.',
     categoryId: 'myths-evidence',
+    subTabId: 'method',
     fileId: '01',
     evidenceGrade: 'High',
     costTier: 'Free',
@@ -449,10 +449,24 @@ export const ARTICLES: Article[] = [
   },
 ];
 
+export const ARTICLES: Article[] = [
+  ...BASE_ARTICLES,
+  ...SLEEP_ARTICLES,
+  ...VITALITY_ARTICLES,
+];
+
 export const ARTICLE_BY_ID = new Map(ARTICLES.map((a) => [a.id, a]));
 export const ARTICLES_BY_CATEGORY = new Map<string, Article[]>();
 ARTICLES.forEach((a) => {
   const list = ARTICLES_BY_CATEGORY.get(a.categoryId) ?? [];
   list.push(a);
   ARTICLES_BY_CATEGORY.set(a.categoryId, list);
+});
+
+export const ARTICLES_BY_SUBTAB = new Map<string, Article[]>();
+ARTICLES.forEach((a) => {
+  if (!a.subTabId) return;
+  const list = ARTICLES_BY_SUBTAB.get(a.subTabId) ?? [];
+  list.push(a);
+  ARTICLES_BY_SUBTAB.set(a.subTabId, list);
 });

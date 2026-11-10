@@ -1,3 +1,11 @@
+export interface SubTab {
+  id: string;
+  title: string;
+  icon?: string;
+  description?: string;
+  articleIds: string[];
+}
+
 export interface Category {
   id: string;
   title: string;
@@ -6,6 +14,7 @@ export interface Category {
   color: string;
   fileIds: string[]; // MD file numbers that map here
   articleCount: number;
+  subTabs?: SubTab[]; // tier-3 tabs inside the category
 }
 
 export interface Article {
@@ -13,6 +22,7 @@ export interface Article {
   title: string;
   summary: string;
   categoryId: string;
+  subTabId?: string; // tier-3 tab this article belongs to
   fileId: string;
   evidenceGrade: 'High' | 'Moderate' | 'Moderate-High' | 'Low' | 'Very low' | 'Insufficient';
   costTier: 'Free' | 'Very low' | 'Low' | 'Moderate' | 'High' | 'Very high';
