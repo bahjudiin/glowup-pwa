@@ -1,0 +1,13 @@
+# Normalise text files to LF in the working tree on every platform.
+# The build generates art.js and data.json and they are committed, so a
+# CRLF checkout would otherwise produce a diff on every rebuild.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.woff2 binary
+*.webmanifest text eol=lf

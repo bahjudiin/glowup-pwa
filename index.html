@@ -1,707 +1,158 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>GlowUp Blueprint</title>
-<link rel="icon" type="image/svg+xml" href="/icon.svg">
-<link rel="apple-touch-icon" href="/icon-192.png">
-<meta name="theme-color" content="#0a0a0f">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/styles.css">
-  <script>
-    window.switchScreen = function(id, btn) {
-      try {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        const el = document.getElementById('screen-' + id);
-        if (el) el.classList.add('active');
-        if (btn && btn.classList) btn.classList.add('active');
-        else {
-          var n = document.querySelector('.nav-btn[data-screen="' + id + '"]');
-          if (n) n.classList.add('active');
-        }
-        try { localStorage.setItem('gu_screen', JSON.stringify(id)) } catch (e) {}
-        try { window.scrollTo(0, 0) } catch (e) {}
-        var sc = el && el.querySelector('.scroll');
-        if (sc && sc.scrollTo) sc.scrollTo({ top: 0 });
-      } catch (e) { console.error('switchScreen:', e) }
-    };
-    window.toggleCollapse = function(header) {
-      try {
-        header.classList.toggle('open');
-        const body = header.nextElementSibling;
-        if (body) body.classList.toggle('open');
-      } catch (e) { console.error('toggleCollapse:', e) }
-    };
-    window.toggleResource = function(id) {
-      try {
-        const card = document.getElementById(id);
-        if (card) card.classList.toggle('open');
-      } catch (e) { console.error('toggleResource:', e) }
-    };
-    window.applyUpdate = function() {
-      try {
-        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-          navigator.serviceWorker.controller.postMessage('SKIP_WAITING');
-        }
-      } catch (e) { console.warn('SW update:', e); }
-      window.location.reload();
-    };
-    window.dismissUpdate = function() {
-      const el = document.getElementById('update-banner');
-      if (el) el.style.display = 'none';
-    };
-  </script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>GlowUp — Men's Transformation Library</title>
+<meta name="description" content="Evidence-graded men's fat-loss, muscle, maintenance and glow-up library: 34 articles across 11 categories, 18 verified products with cost-per-serving maths, 26 USDA nutrition entries and 5 meal templates." />
+<meta name="theme-color" content="#0e0c16" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)" />
+<meta name="color-scheme" content="light dark" />
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.webmanifest" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="GlowUp" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+<link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="GlowUp — Men's Transformation Library" />
+<meta property="og:description" content="34 evidence-graded articles, 18 products with verified prices and cost-per-serving maths, 26 USDA foods and 5 meal templates. Installable, works offline." />
+<meta property="og:image" content="icons/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="stylesheet" href="assets/app.css" />
+
+<!-- glowup:standalone-flag -->
+<script>
+  /* Apply the persisted theme before first paint (no flash).
+     The standalone build defaults to dark; the hosted build follows the OS. */
+  (function () {
+    try {
+      var saved = localStorage.getItem("glowup:theme");
+      var preferDark = window.GLOWUP_STANDALONE
+        ? true
+        : !window.matchMedia("(prefers-color-scheme: light)").matches;
+      var dark = saved ? saved === "dark" : preferDark;
+      document.documentElement.classList.toggle("dark", dark);
+    } catch (e) {}
+  })();
+</script>
 </head>
-<body>
-<div class="update-banner" id="update-banner" style="display:none">
-  <div class="ub-text"><strong>New Update Available!</strong>A new version is ready.</div>
-  <button class="ub-btn" onclick="applyUpdate()">Update</button>
-  <button class="ub-close" onclick="dismissUpdate()">&times;</button>
-</div>
-<div class="shell">
 
-  <!-- HOME -->
-  <div class="screen active" id="screen-home">
-    <div class="home-header">
-      <div class="greeting" id="greeting">Good Morning</div>
-      <div class="hero-title">Ready to <em>Level Up?</em></div>
-      <div class="streak-bar">
-        <span style="font-size:20px">&#x1F525;</span>
-        <span class="streak-text" id="streak-display">0-Day Streak</span>
-        <span style="margin-left:auto;font-size:12px;color:var(--text3);font-weight:600" id="streak-msg">Start today!</span>
+<body class="min-h-dvh">
+<a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground">Skip to content</a>
+
+<!-- ================= Header ================= -->
+<header class="safe-top app-bar">
+  <div class="app-bar-inner mx-auto max-w-screen-md">
+    <div class="app-bar-brand">
+      <span aria-hidden="true" class="app-bar-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" class="h-4 w-4">
+          <path d="M12 3v2M12 19v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M3 12h2M19 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+          <circle cx="12" cy="12" r="3.4"/>
+        </svg>
+      </span>
+      <div class="min-w-0">
+        <p class="app-bar-title truncate">GlowUp</p>
+        <p class="app-bar-sub truncate" id="app-bar-sub">Today</p>
       </div>
     </div>
-    <div class="scroll" style="padding-top:4px">
-      <div class="section-title">This Week</div>
-      <div class="week-grid" id="week-grid"></div>
-      <div class="card-lg" style="display:flex;align-items:center;gap:20px">
-        <div class="score-ring">
-          <svg width="90" height="90" viewBox="0 0 90 90"><circle cx="45" cy="45" r="38" stroke="#2a2a3a" stroke-width="7" fill="none"/><circle cx="45" cy="45" r="38" stroke="url(#grad1)" stroke-width="7" fill="none" stroke-dasharray="239" stroke-dashoffset="57" stroke-linecap="round"/><defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#7c5cfc"/><stop offset="100%" stop-color="#f472b6"/></linearGradient></defs></svg>
-          <div style="position:absolute;text-align:center"><div style="font-size:24px;font-weight:900" id="glow-score">76</div><div style="font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">Glow</div></div>
-        </div>
-        <div style="flex:1">
-          <div style="font-size:16px;font-weight:800;margin-bottom:4px" id="glow-title">Rising Star</div>
-          <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px" id="glow-desc">Complete your daily goals to improve your score!</div>
-          <div class="pill pill-purple" id="glow-pill">+0 pts this week</div>
-        </div>
-      </div>
 
-      <!-- CATEGORY TABS — rendered by engine from js/data/library.js -->
-      <div class="cat-tabs" data-deck-tabs></div>
+    <button id="search-open" class="icon-btn" aria-label="Search everything">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+    </button>
 
-      <!-- HEALTH -->
-      <div id="cat-health">
-        <!-- EYES -->
-        <div class="tab-pane" id="h-eyes">
-          <div class="eye-note"><div class="eye-note-title">&#x1F4A1; NOTE TO SELF</div><div class="eye-note-text">Your eyes are one of the most important parts of your body. Bad habits like excessive screen time harm vision. Wear blue light blockers. Reduce screen time. Take morning walks for natural sunlight.</div></div>
-          <div class="section-title">Digital Eye Strain</div>
-          <div class="card"><p style="font-size:13px;color:var(--text2);line-height:1.7">We ask our eyes to stare at a glowing rectangle for 10+ hours daily. This leads to <strong style="color:var(--text)">computer vision syndrome</strong>.</p>
-            <div style="display:flex;flex-direction:column;gap:6px;margin-top:10px">
-              <div style="display:flex;gap:10px;align-items:center"><span>&#x1F630;</span><span style="font-size:12px;color:var(--text2)">Chronic eye fatigue</span></div>
-              <div style="display:flex;gap:10px;align-items:center"><span>&#x1F3DC;&#xFE0F;</span><span style="font-size:12px;color:var(--text2)">Severe dryness and irritation</span></div>
-              <div style="display:flex;gap:10px;align-items:center"><span>&#x1F32B;&#xFE0F;</span><span style="font-size:12px;color:var(--text2)">Blurred vision</span></div>
-              <div style="display:flex;gap:10px;align-items:center"><span>&#x1F914;</span><span style="font-size:12px;color:var(--text2)">Tension headaches</span></div>
-            </div>
-          </div>
-          <div class="section-title">Causes</div>
-          <div class="cause-card"><div class="cause-stat">60-80%</div><div class="cause-stat-label">Blink Rate Crash</div><p style="margin-top:8px">Blink rate drops by half on screens. During hyper-focus it plummets 60-80%.</p></div>
-          <div class="cause-card"><div class="cause-stat-label">&#x26A1; Oxidative Stress</div><p style="margin-top:8px">Prolonged artificial light creates free radicals damaging retinal cells.</p></div>
-          <div class="cause-card"><div class="cause-stat-label">&#x1F512; Ciliary Muscle Lock</div><p style="margin-top:8px">Tiny eye muscles cramp from hours of near-focus.</p></div>
-          <div class="section-title">Blueprint</div>
-          <div class="collapse-header open" onclick="toggleCollapse(this)"><h4>&#x1F3AF; 20-20-20 Rule</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body open"><ul><li><span>&#x1F441;&#xFE0F;</span><span>Every 20 min, look at something 20 feet away for 20 seconds.</span></li></ul></div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x2600;&#xFE0F; Morning Sunlight</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1F305;</span><span>15-min walk within an hour of waking. Triggers dopamine in retina.</span></li></ul></div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F9CA; Cool Water Washes</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1F4A6;</span><span>Splash cool water when eyes feel heavy. Reduces inflammation.</span></li></ul></div>
-          <div class="section-title">Eat For Your Eyes</div>
-          <div class="card"><div style="display:flex;flex-direction:column;gap:6px">
-            <div style="display:flex;gap:10px;align-items:center"><span>&#x1F95A;</span><span style="font-size:12px;color:var(--text2)">Egg yolks</span></div>
-            <div style="display:flex;gap:10px;align-items:center"><span>&#x1F96C;</span><span style="font-size:12px;color:var(--text2)">Dark leafy greens</span></div>
-            <div style="display:flex;gap:10px;align-items:center"><span>&#x1F955;</span><span style="font-size:12px;color:var(--text2)">Carrots</span></div>
-            <div style="display:flex;gap:10px;align-items:center"><span>&#x1FAD0;</span><span style="font-size:12px;color:var(--text2)">Blueberries</span></div>
-            <div style="display:flex;gap:10px;align-items:center"><span>&#x1F41F;</span><span style="font-size:12px;color:var(--text2)">Fatty fish</span></div>
-          </div></div>
-                 </div>
-
-        <!-- FACE -->
-        <div class="tab-pane" id="h-face" style="display:none">
-          <div class="face-header">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div style="font-size:16px;font-weight:800">Face Analysis</div><div class="pill pill-gold">Score: 78</div></div>
-            <div class="face-score-wrap">
-              <div class="score-ring"><svg width="90" height="90" viewBox="0 0 90 90"><circle cx="45" cy="45" r="38" stroke="#2a2a3a" stroke-width="7" fill="none"/><circle cx="45" cy="45" r="38" stroke="url(#fg2)" stroke-width="7" fill="none" stroke-dasharray="239" stroke-dashoffset="53" stroke-linecap="round"/><defs><linearGradient id="fg2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f5c842"/><stop offset="100%" stop-color="#fb923c"/></linearGradient></defs></svg><div style="position:absolute;text-align:center"><div style="font-size:28px;font-weight:900;color:var(--gold)">78</div><div style="font-size:8px;font-weight:700;color:var(--text3);text-transform:uppercase">Face</div></div></div>
-              <div class="face-score-details">
-                <div class="attr-row"><span class="attr-label">Symmetry</span><div class="attr-bar"><div class="progress-fill" style="width:82%;background:var(--green2)"></div></div><input type="number" class="face-score-input" value="82" min="0" max="100" onchange="updateFaceScore('symmetry',this.value)"></div>
-                <div class="attr-row"><span class="attr-label">Jawline</span><div class="attr-bar"><div class="progress-fill" style="width:70%;background:var(--gold)"></div></div><input type="number" class="face-score-input" value="70" min="0" max="100" onchange="updateFaceScore('jawline',this.value)"></div>
-                <div class="attr-row"><span class="attr-label">Skin</span><div class="attr-bar"><div class="progress-fill" style="width:65%;background:var(--orange)"></div></div><input type="number" class="face-score-input" value="65" min="0" max="100" onchange="updateFaceScore('skin',this.value)"></div>
-                <div class="attr-row"><span class="attr-label">Eyes</span><div class="attr-bar"><div class="progress-fill" style="width:88%;background:var(--accent2)"></div></div><input type="number" class="face-score-input" value="88" min="0" max="100" onchange="updateFaceScore('eyes',this.value)"></div>
-                <div class="attr-row"><span class="attr-label">Brows</span><div class="attr-bar"><div class="progress-fill" style="width:58%;background:var(--red)"></div></div><input type="number" class="face-score-input" value="58" min="0" max="100" onchange="updateFaceScore('brows',this.value)"></div>
-              </div>
-            </div>
-          </div>
-          <div class="section-title">Improvement Tips</div>
-          <div class="tip-card"><div class="tip-num">Tip 01</div><div class="tip-title">Shape Your Brows</div><div class="tip-body">Get shaped once professionally, then maintain. Brush upward daily. Quick win: +5-8 points.</div><div class="tip-tag-row"><span class="pill pill-red">Low Score</span><span class="pill pill-purple">Quick Win</span></div></div>
-          <div class="tip-card"><div class="tip-num">Tip 02</div><div class="tip-title">Clear Skin Tone</div><div class="tip-body">Cleanser AM/PM, niacinamide serum, SPF 50. 30 days for visible results.</div><div class="tip-tag-row"><span class="pill pill-orange">Medium</span><span class="pill pill-green">30-Day Fix</span></div></div>
-          <div class="tip-card"><div class="tip-num">Tip 03</div><div class="tip-title">Chisel Jaw</div><div class="tip-body">Mewing + mastic gum 20 min daily. Reduce body fat below 15%.</div><div class="tip-tag-row"><span class="pill pill-gold">Long Term</span><span class="pill pill-blue">High Impact</span></div></div>
-          <div class="section-title">Debloat Face</div>
-          <div class="card"><div style="display:flex;flex-direction:column;gap:8px">
-            <div style="display:flex;gap:10px;align-items:center"><span>&#x1F9CA;</span><span style="font-size:12px;color:var(--text2)">Cold water splash every morning</span></div>
-            <div style="display:flex;gap:10px;align-items:center"><span>&#x1F9C2;</span><span style="font-size:12px;color:var(--text2)">Reduce sodium, avoid processed food</span></div>
-            <div style="display:flex;gap:10px;align-items:center"><span>&#x1F3C3;</span><span style="font-size:12px;color:var(--text2)">Daily cardio for lymphatic drainage</span></div>
-            <div style="display:flex;gap:10px;align-items:center"><span>&#x1F486;</span><span style="font-size:12px;color:var(--text2)">Gua sha massage, reduces puffiness 30%</span></div>
-          </div></div>
-          <div class="section-title">Morning Routine</div>
-          <div class="card"><div style="display:flex;flex-direction:column;gap:10px">
-            <div style="display:flex;gap:12px;align-items:center"><span style="width:26px;height:26px;background:rgba(124,92,252,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--accent2);flex-shrink:0">1</span><div style="flex:1"><div style="font-size:13px;font-weight:700">Cleanser</div><div style="font-size:11px;color:var(--text3)">60 sec massage</div><div class="shop-btns"><a class="shop-btn shop-btn-amazon" href="https://www.amazon.com/s?k=gentle+face+cleanser" target="_blank" rel="noopener">Amazon</a><a class="shop-btn shop-btn-iherb" href="https://www.iherb.com/search?kw=gentle+face+cleanser" target="_blank" rel="noopener">iHerb</a></div></div></div>
-            <div style="display:flex;gap:12px;align-items:center"><span style="width:26px;height:26px;background:rgba(124,92,252,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--accent2);flex-shrink:0">2</span><div style="flex:1"><div style="font-size:13px;font-weight:700">Niacinamide Serum</div><div style="font-size:11px;color:var(--text3)">3 drops, press into skin</div><div class="shop-btns"><a class="shop-btn shop-btn-amazon" href="https://www.amazon.com/s?k=niacinamide+serum" target="_blank" rel="noopener">Amazon</a><a class="shop-btn shop-btn-iherb" href="https://www.iherb.com/search?kw=niacinamide+serum" target="_blank" rel="noopener">iHerb</a></div></div></div>
-            <div style="display:flex;gap:12px;align-items:center"><span style="width:26px;height:26px;background:rgba(124,92,252,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--accent2);flex-shrink:0">3</span><div style="flex:1"><div style="font-size:13px;font-weight:700">Moisturizer</div><div style="font-size:11px;color:var(--text3)">Light gel, pea-sized</div><div class="shop-btns"><a class="shop-btn shop-btn-amazon" href="https://www.amazon.com/s?k=light+gel+moisturizer+face" target="_blank" rel="noopener">Amazon</a><a class="shop-btn shop-btn-iherb" href="https://www.iherb.com/search?kw=light+gel+moisturizer" target="_blank" rel="noopener">iHerb</a></div></div></div>
-            <div style="display:flex;gap:12px;align-items:center"><span style="width:26px;height:26px;background:rgba(245,200,66,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--gold);flex-shrink:0">4</span><div style="flex:1"><div style="font-size:13px;font-weight:700">SPF 50</div><div style="font-size:11px;color:var(--text3)">Non-negotiable</div><div class="shop-btns"><a class="shop-btn shop-btn-amazon" href="https://www.amazon.com/s?k=SPF+50+sunscreen+face" target="_blank" rel="noopener">Amazon</a><a class="shop-btn shop-btn-iherb" href="https://www.iherb.com/search?kw=SPF+50+sunscreen" target="_blank" rel="noopener">iHerb</a></div></div></div>
-          </div></div>
-        </div>
-
-        <!-- LIPS -->
-        <div class="tab-pane" id="h-lips" style="display:none">
-          <div class="bp-note"><div class="bp-note-title">&#x1F444; LIP CARE GOAL</div><div class="bp-note-text">Pink, soft, healthy lips. Hydration + protection + consistent care.</div></div>
-          <div class="section-title">Daily Routine</div>
-          <div class="routine-step"><div class="routine-step-num" style="background:rgba(124,92,252,.15);color:var(--accent2)">1</div><div class="routine-step-info"><h4>Exfoliate</h4><p>Sugar + honey scrub, gentle circular motions. Removes dead skin.</p></div><span class="routine-freq">2x/Week</span></div>
-          <div class="routine-step"><div class="routine-step-num" style="background:rgba(46,204,113,.15);color:var(--green2)">2</div><div class="routine-step-info"><h4>Moisturize</h4><p>Apply lip balm immediately after exfoliating or washing face.</p></div><span class="routine-freq">Daily</span></div>
-          <div class="routine-step"><div class="routine-step-num" style="background:rgba(245,200,66,.15);color:var(--gold)">3</div><div class="routine-step-info"><h4>Protect</h4><p>Use SPF lip balm when going outside. Prevents darkening.</p></div><span class="routine-freq">Daily</span></div>
-          <div class="routine-step"><div class="routine-step-num" style="background:rgba(79,195,247,.15);color:var(--blue)">4</div><div class="routine-step-info"><h4>Hydrate</h4><p>Drink 3-4L water daily. Lips show dehydration first.</p></div><span class="routine-freq">Always</span></div>
-                   <div class="section-title">Avoid</div>
-          <div class="bp-avoid-grid">
-            <div class="bp-avoid-chip">&#x1F6AB; Licking lips</div>
-            <div class="bp-avoid-chip">&#x1F6AB; Biting dead skin</div>
-            <div class="bp-avoid-chip">&#x1F6AB; Matte lipsticks</div>
-            <div class="bp-avoid-chip">&#x1F6AB; Dehydration</div>
-          </div>
-        </div>
-
-        <!-- TEETH -->
-        <div class="tab-pane" id="h-teeth" style="display:none">
-          <div class="bp-note"><div class="bp-note-title">&#x1F9B7; TEETH CARE GOAL</div><div class="bp-note-text">White, clean teeth with fresh breath. Daily hygiene + periodic whitening.</div></div>
-          <div class="section-title">Daily Routine</div>
-          <div class="routine-step"><div class="routine-step-num" style="background:rgba(124,92,252,.15);color:var(--accent2)">1</div><div class="routine-step-info"><h4>Brush 2 Min</h4><p>Electric toothbrush, 45-degree angle, circular motions.</p></div><span class="routine-freq">2x/Day</span></div>
-          <div class="routine-step"><div class="routine-step-num" style="background:rgba(46,204,113,.15);color:var(--green2)">2</div><div class="routine-step-info"><h4>Floss</h4><p>Removes plaque between teeth. Prevents cavities + bad breath.</p></div><span class="routine-freq">Daily</span></div>
-          <div class="routine-step"><div class="routine-step-num" style="background:rgba(245,200,66,.15);color:var(--gold)">3</div><div class="routine-step-info"><h4>Mouthwash</h4><p>30 sec swish. Kills bacteria, freshens breath.</p></div><span class="routine-freq">Daily</span></div>
-          <div class="routine-step"><div class="routine-step-num" style="background:rgba(79,195,247,.15);color:var(--blue)">4</div><div class="routine-step-info"><h4>Tongue Scrape</h4><p>Removes bacteria buildup. Major cause of bad breath.</p></div><span class="routine-freq">Daily</span></div>
-                   <div class="section-title">Whitening Tips</div>
-          <div class="card"><div style="display:flex;flex-direction:column;gap:8px">
-            <div style="display:flex;gap:10px;align-items:center"><span>&#x1F4A7;</span><span style="font-size:12px;color:var(--text2)">Drink coffee/tea through a straw to prevent staining</span></div>
-            <div style="display:flex;gap:10px;align-items:center"><span>&#x1F345;</span><span style="font-size:12px;color:var(--text2)">Eat strawberries + baking soda (natural whitener)</span></div>
-            <div style="display:flex;gap:10px;align-items:center"><span>&#x1F9C2;</span><span style="font-size:12px;color:var(--text2)">Oil pulling with coconut oil 10 min daily</span></div>
-            <div style="display:flex;gap:10px;align-items:center"><span>&#x2702;&#xFE0F;</span><span style="font-size:12px;color:var(--text2)">Professional cleaning every 6 months</span></div>
-          </div></div>
-          <div class="section-title">Avoid</div>
-          <div class="bp-avoid-grid">
-            <div class="bp-avoid-chip">&#x1F6AB; Smoking</div>
-            <div class="bp-avoid-chip">&#x1F6AB; Excess coffee</div>
-            <div class="bp-avoid-chip">&#x1F6AB; Sugary drinks</div>
-            <div class="bp-avoid-chip">&#x1F6AB; Skipping floss</div>
-          </div>
-        </div>
-
-        <!-- BIG D -->
-        <div class="tab-pane" id="h-bigd" style="display:none">
-          <div class="eye-note"><div class="eye-note-title">&#x1F4D8; BIG D - MEN'S VITALITY GUIDE</div><div class="eye-note-text">Comprehensive guide blending science, ancestral medicine, and practical strategies for sexual health, fertility, attraction, and testosterone optimization.</div></div>
-          <div class="section-title">Sexual Function</div>
-          <div class="collapse-header open" onclick="toggleCollapse(this)"><h4>&#x26A0;&#xFE0F; Stress: Root Cause</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body open"><ul><li><span>&#x26A1;</span><span><strong style="color:var(--text)">Stress is the #1 cause</strong> of ED and PE. It triggers catabolic processes that deplete nutrients and hormones.</span></li><li><span>&#x1F4AA;</span><span><strong style="color:var(--green2)">Anti-stress:</strong> Testosterone, DHT, thyroid, progesterone, DHEA, dopamine, acetylcholine, nitric oxide</span></li><li><span>&#x1F630;</span><span><strong style="color:var(--red)">Stress:</strong> Cortisol, prolactin, estrogen, serotonin, oxidative stress</span></li></ul></div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F534; ED Facts</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1F4CA;</span><span><strong style="color:var(--text)">30% under 30</strong> and 25% under 40 report ED. Not just an older man issue.</span></li><li><span>&#x1F6AB;</span><span><strong style="color:var(--red)">Avoid:</strong> Beer, cigarettes, fast food (PUFAs), prolonged sitting, tight underwear</span></li><li><span>&#x1F319;</span><span>Sleep is #1 defense - melatonin is a powerful antioxidant protecting nerves</span></li><li><span>&#x1F9C4;</span><span>H2S from sulfur-rich foods (garlic, onion) is an alternative vasodilator to NO</span></li></ul></div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F33F; Herbal Solutions</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1F33F;</span><span><strong>Ashwagandha:</strong> Reduces stress 20%, boosts blood flow + testosterone</span></li><li><span>&#x1F33F;</span><span><strong>Tribulus:</strong> Lowers prolactin/estrogen, raises dopamine. Min 120mg protodioscin</span></li><li><span>&#x1F33F;</span><span><strong>Mucuna:</strong> L-DOPA precursor, raises dopamine + testosterone, lowers serotonin</span></li><li><span>&#x1F33F;</span><span><strong>Butea Superba:</strong> Raises DHT, critical for libido drive</span></li><li><span>&#x1F33F;</span><span><strong>Tongkat Ali:</strong> Aromatase inhibitor + PDE-5 inhibitor, improves blood flow</span></li><li><span>&#x1F33F;</span><span><strong>Horny Goat Weed:</strong> Natural PDE-5 inhibitor, "herbal viagra"</span></li><li><span>&#x1F33F;</span><span><strong>Maca:</strong> Enhances oxygenation + endurance. 2-4g daily for 12 weeks</span></li><li><span>&#x1F33F;</span><span><strong>Ginkgo:</strong> Antioxidant, improves circulation, lowers serotonin</span></li></ul></div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F48E; Vasodilatory Foods</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1F36B;</span><span>Cacao, beets, pomegranate, watermelon boost NO</span></li><li><span>&#x1F9C4;</span><span>Garlic + Vitamin C combo increases NO by 200%</span></li><li><span>&#x1FAD0;</span><span>Ginger reduces serotonin via 5-HT3 receptor</span></li></ul></div>
-          <div class="section-title">Premature Ejaculation</div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F9E0; PE Solutions</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1F9E0;</span><span>PE caused by <strong>low dopamine + elevated serotonin/adrenaline</strong></span></li><li><span>&#x1F95A;</span><span>Acetylcholine (egg yolks, liver, royal jelly) stimulates dopamine</span></li><li><span>&#x1F33F;</span><span>Taurine supports dopamine + GABA for calm control</span></li></ul></div>
-          <div class="section-title">Fertility 101</div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F9EC; Sperm Health</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x26A0;&#xFE0F;</span><span><strong style="color:var(--red)">Xenoestrogens</strong> (plastics, phthalates) reduce sperm counts</span></li><li><span>&#x1F9EA;</span><span><strong>LH</strong> signals testosterone. <strong>FSH</strong> signals sperm production.</span></li></ul></div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F48E; Key Enhancers</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1FAD0;</span><span><strong>Ginger:</strong> +16% sperm count, improves LH/FSH/testosterone</span></li><li><span>&#x1F48A;</span><span><strong>Vitamin E:</strong> Fertility vitamin, protects against PUFA damage</span></li><li><span>&#x1F48A;</span><span><strong>Vitamin K2:</strong> Boosts testosterone, supports Leydig cells</span></li><li><span>&#x1FAA8;</span><span><strong>Shilajit:</strong> +37.6% sperm quality, +61.4% count, +23.5% T</span></li><li><span>&#x1F9EC;</span><span><strong>Cistanche:</strong> Restores Kisspeptin 1, essential for reproduction</span></li><li><span>&#x1F36F;</span><span><strong>Royal Jelly:</strong> +20% testosterone in 3 months</span></li><li><span>&#x1F95C;</span><span><strong>Maca:</strong> Increases sperm counts + semen quality</span></li><li><span>&#x1F9C0;</span><span><strong>Raw onions + garlic:</strong> Improve sperm number + motility</span></li></ul></div>
-          <div class="section-title">Attraction Factor</div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F4AA; Androgen Signs</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1F487;</span><span><strong>Hair:</strong> Healthy hair = virility driven by testosterone/DHT</span></li><li><span>&#x1F9CD;</span><span><strong>Face:</strong> Broad jawline, cheekbones = higher testosterone</span></li><li><span>&#x1F50A;</span><span><strong>Voice:</strong> Lower pitch = higher DHT exposure during puberty</span></li><li><span>&#x1F3CB;&#xFE0F;</span><span><strong>Body:</strong> Broad shoulders, lean waist, vascularity</span></li><li><span>&#x1F91C;</span><span><strong>Grip:</strong> Forearm strength correlates with testosterone</span></li></ul></div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F443; Pheromones</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1F9EA;</span><span>Androsterones in sweat increase attraction via musky odor</span></li><li><span>&#x1F3C3;</span><span>Exercise-induced sweating enhances pheromone levels</span></li><li><span>&#x1F969;</span><span>Animal-based diet boosts musky body odor</span></li><li><span>&#x1F6AB;</span><span>Avoid over-washing with chemicals, preserve skin microbiome</span></li></ul></div>
-          <div class="section-title">Fix Low Testosterone</div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x26A1; Boost LH &amp; Dopamine</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1FAD0;</span><span>Ginger, taurine, cistanche, mucuna, manganese boost GnRH &#8594; LH &amp; FSH &#8594; T</span></li></ul></div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F48A; Fix Deficiencies</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1F48A;</span><span><strong>Vitamins A, K2, E, D, B complex</strong> for hormone synthesis</span></li><li><span>&#x1F48A;</span><span><strong>Zinc, Selenium, Iodine</strong> for thyroid + testosterone</span></li><li><span>&#x1FAA8;</span><span><strong>Shilajit</strong> for mitochondrial + hormonal enhancement</span></li><li><span>&#x1F48A;</span><span><strong>Boron + Magnesium</strong> improve free T, reduce estrogen</span></li></ul></div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F9E0; Manage Serotonin</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1F48A;</span><span>Magnesium regulates serotonin, calms nervous system</span></li><li><span>&#x1F33F;</span><span>Ginkgo counters serotonin excess, enhances blood flow</span></li><li><span>&#x1FAD0;</span><span>Ginger reduces gut serotonin via 5-HT3 receptor</span></li><li><span>&#x1F375;</span><span>L-Theanine reduces anxiety, boosts antioxidants</span></li></ul></div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F6AB; Toxins &amp; EMFs</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1F6AB;</span><span><strong style="color:var(--red)">Xenoestrogens:</strong> Avoid plastics, phthalates, endocrine disruptors</span></li><li><span>&#x1F4E1;</span><span><strong style="color:var(--red)">EMFs:</strong> Increase calcium influx, impair gonadal function</span></li><li><span>&#x1F48A;</span><span>Protect with magnesium, grounding, blue light glasses</span></li></ul></div>
-          <div class="eye-note" style="margin-top:12px"><div class="eye-note-title">&#x1F511; KEY TAKEAWAY</div><div class="eye-note-text">Stress management + nutrition + avoiding environmental toxins = optimized sexual health, fertility, testosterone, and attraction. A holistic approach covering physical, neurological, hormonal, and psychological factors.</div></div>
-        </div>
-
-        <!-- SLEEP -->
-        <div class="tab-pane" id="h-sleep" style="display:none">
-          <div class="bp-note"><div class="bp-note-title">&#x1F634; SLEEP GOAL</div><div class="bp-note-text">7&#8211;9 hours, every night. Sleep is upstream of appetite, testosterone, training adaptation and stress. Fix it first and everything else gets cheaper.</div></div>
-          <div class="section-title">The Baseline</div>
-          <div class="collapse-header open" onclick="toggleCollapse(this)"><h4>&#x23F0; Fixed Wake Time</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body open"><ul><li><span>&#x1F550;</span><span><strong style="color:var(--text)">Same wake time every day</strong>, weekends included. Wake time anchors the circadian clock; bedtime follows.</span></li><li><span>&#x1F305;</span><span><strong style="color:var(--green2)">Morning daylight:</strong> 10&#8211;20 min outdoors within an hour of waking. Free, and the strongest single sleep cue.</span></li><li><span>&#x1F9FA;</span><span>Cool room (18&#8211;19&#xB0;C), blackout if you can manage it.</span></li></ul></div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x2615; Caffeine &amp; Alcohol</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x23F0;</span><span>Caffeine half-life is ~5&#8211;6 hours. A 14:00 coffee is still half-active at 20:00 &#8212; <strong style="color:var(--text)">cut off 8&#8211;10 h before bed</strong>.</span></li><li><span>&#x1F3F6;</span><span>Alcohol helps you fall asleep but <strong style="color:var(--red)">fragments the second half of the night</strong> and suppresses testosterone for hours after.</span></li></ul></div>
-          <div class="section-title">Sleep Apnoea</div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F634; Screen For OSA</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1F6A8;</span><span>Snoring, witnessed apnoeas, morning headaches, dry mouth, unrefreshing sleep.</span></li><li><span>&#x1F4A7;</span><span>Apnoea causes intermittent hypoxia &#8212; it suppresses testosterone and drives hypertension and weight gain.</span></li><li><span>&#x2705;</span><span>A home sleep-apnoea test is worth it if any of those apply. Treating it is one of the highest-return moves available.</span></li></ul></div>
-          <div class="section-title">Fixing Bad Sleep</div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F9E0; CBT-I for Insomnia</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1F6AB;</span><span>Get out of bed if you are awake more than 20 min. Do not lie there frustrated.</span></li><li><span>&#x1F634;</span><span>No naps after 15:00. Never sleep in to compensate &#8212; it makes the next night worse.</span></li><li><span>&#x1F4DA;</span><span>If you cannot sleep: get up, do something dull in dim light, return when sleepy.</span></li><li><span>&#x1F48A;</span><span>CBT-I beats sleeping pills long-term and has no dependence risk.</span></li></ul></div>
-          <div class="section-title">Sleep Debt</div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F504; Paying It Back</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1F4C8;</span><span>A week of 5-hour nights is <strong style="color:var(--text)">not</strong> repaid on the weekend. It carries for days.</span></li><li><span>&#x2191;</span><span><strong style="color:var(--green2)">Climb, do not crash:</strong> add 20&#8211;30 min per night. Expect 5&#8211;7 nights to feel different, 2&#8211;3 weeks to recover metabolic markers.</span></li><li><span>&#x1F3CB;&#xFE0F;</span><span>Under 6 h for two nights? Cut training <strong style="color:var(--gold)">volume</strong> by half, not intensity.</span></li><li><span>&#x1F634;</span><span>Naps: 20 min, before 15:00. Never replace a night of sleep.</span></li></ul></div>
-          <div class="section-title">Appetite &amp; Satiety</div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F37D;&#xFE0F; Sleep Loss Makes You Hungry</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1F9A0;</span><span>One or two short nights raise <strong style="color:var(--text)">ghrelin</strong> (hunger) and lower <strong style="color:var(--text)">leptin</strong> (satiety).</span></li><li><span>&#x1F95A;</span><span>Protein 1.6&#8211;2.4 g/kg, fibre 25&#8211;38 g/day, high-volume foods, water before meals.</span></li><li><span>&#x1F4A6;</span><span>Together these cut intake 300&#8211;700 kcal/day without counting anything.</span></li></ul></div>
-          <div class="eye-note" style="margin-top:12px"><div class="eye-note-title">&#x1F511; KEY TAKEAWAY</div><div class="eye-note-text">Fix the wake time before anything else. If your resting heart rate is up, motivation is gone and your sleep is poor, you are not lazy &#8212; you are under-recovered.</div></div>
-        </div>
-      </div>
-
-      <!-- GROOMING -->
-      <div id="cat-skincare">
-        <!-- HAIR -->
-        <div class="tab-pane" id="s-hair">
-          <div class="card" style="background:linear-gradient(135deg,rgba(46,204,113,.08),rgba(79,195,247,.08));border-color:rgba(46,204,113,.2)">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div><div style="font-size:13px;font-weight:700;color:var(--text2)">Hair Health</div><div style="font-size:32px;font-weight:900;color:var(--green2)">65<span style="font-size:16px;color:var(--text3)">/100</span></div></div><span style="font-size:40px">&#x1F486;</span></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-              <div style="background:rgba(0,0,0,.2);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;color:var(--green2)">72</div><div style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase">Thickness</div></div>
-              <div style="background:rgba(0,0,0,.2);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;color:var(--gold)">58</div><div style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase">Shine</div></div>
-            </div>
-          </div>
-          <div class="section-title">Silkier Hair</div>
-          <div class="routine-item"><div class="routine-icon">&#x1F6BF;</div><div class="routine-info"><h4>Cold Water Rinse</h4><p>Close cuticle, boost shine. 30 sec after conditioning.</p><span class="routine-freq">Every Wash</span></div></div>
-          <div class="routine-item"><div class="routine-icon">&#x1F965;</div><div class="routine-info"><h4>Deep Conditioning</h4><p>Coconut oil + honey + egg. Leave 30 min.</p><span class="routine-freq">2x/Week</span></div></div>
-          <div class="routine-item"><div class="routine-icon">&#x1F48A;</div><div class="routine-info" style="flex:1"><h4>Biotin + Collagen</h4><p>5000mcg + 10g daily. Results in 3 months.</p><div class="shop-btns"><a class="shop-btn shop-btn-amazon" href="https://www.amazon.com/s?k=biotin+collagen+5000mcg" target="_blank" rel="noopener">Amazon</a><a class="shop-btn shop-btn-iherb" href="https://www.iherb.com/search?kw=biotin+collagen" target="_blank" rel="noopener">iHerb</a></div><span class="routine-freq">Daily</span></div></div>
-          <div class="routine-item"><div class="routine-icon">&#x1F9E4;</div><div class="routine-info"><h4>Scalp Massage</h4><p>5 min daily. Increases blood flow, stimulates follicles.</p><span class="routine-freq">Daily</span></div></div>
-          <div class="routine-item"><div class="routine-icon">&#x1F33F;</div><div class="routine-info" style="flex:1"><h4>Rosemary Oil</h4><p>5 drops + carrier oil. Leave overnight.</p><div class="shop-btns"><a class="shop-btn shop-btn-amazon" href="https://www.amazon.com/s?k=rosemary+oil+for+hair" target="_blank" rel="noopener">Amazon</a><a class="shop-btn shop-btn-iherb" href="https://www.iherb.com/search?kw=rosemary+oil+hair" target="_blank" rel="noopener">iHerb</a></div><span class="routine-freq">3x/Week</span></div></div>
-          <div class="section-title">Hair Loss</div>
-          <div class="routine-item"><div class="routine-info" style="flex:1"><h4>Minoxidil 5%</h4><p>FDA-approved. 1ml to dry scalp 2x daily. 3-6 months.</p><div class="shop-btns"><a class="shop-btn shop-btn-amazon" href="https://www.amazon.com/s?k=minoxidil+5%25" target="_blank" rel="noopener">Amazon</a><a class="shop-btn shop-btn-iherb" href="https://www.iherb.com/search?kw=minoxidil+5" target="_blank" rel="noopener">iHerb</a></div><span class="routine-freq">2x Daily</span></div></div>
-          <div class="routine-item"><div class="routine-icon">&#x1FA79;</div><div class="routine-info" style="flex:1"><h4>Microneedling</h4><p>0.5-1mm dermaroller weekly. Boosts absorption 4x.</p><div class="shop-btns"><a class="shop-btn shop-btn-amazon" href="https://www.amazon.com/s?k=dermaroller+1mm+scalp" target="_blank" rel="noopener">Amazon</a></div><span class="routine-freq">1x/Week</span></div></div>
-          <div class="section-title">Eyebrows</div>
-          <div class="routine-item"><div class="routine-icon">&#x2702;&#xFE0F;</div><div class="routine-info"><h4>Professional Shaping</h4><p>One threading session. Maintain at home.</p><span class="routine-freq">Once Then Monthly</span></div></div>
-          <div class="routine-item"><div class="routine-icon">&#x1F33F;</div><div class="routine-info" style="flex:1"><h4>Castor Oil</h4><p>Apply nightly with spoolie. Results in 6-8 weeks.</p><div class="shop-btns"><a class="shop-btn shop-btn-amazon" href="https://www.amazon.com/s?k=castor+oil+eyebrows" target="_blank" rel="noopener">Amazon</a><a class="shop-btn shop-btn-iherb" href="https://www.iherb.com/search?kw=castor+oil+eyebrows" target="_blank" rel="noopener">iHerb</a></div><span class="routine-freq">Daily</span></div></div>
-        </div>
-        <!-- BEARD -->
-        <div class="tab-pane" id="s-beard" style="display:none">
-          <div class="card" style="background:linear-gradient(135deg,rgba(245,200,66,.08),rgba(251,146,60,.08));border-color:rgba(245,200,66,.2)">
-            <div style="font-size:13px;font-weight:700;color:var(--text2)">Beard Growth</div>
-            <div style="font-size:28px;font-weight:900;color:var(--gold)">Week 3 of 12</div>
-            <div class="progress-bar" style="margin-top:10px"><div class="progress-fill" style="width:25%;background:linear-gradient(90deg,var(--gold),var(--orange))"></div></div>
-            <div style="font-size:12px;color:var(--text3);margin-top:6px">Results at week 8+</div>
-          </div>
-          <div class="section-title">Growth Blueprint</div>
-          <div class="routine-item"><div class="routine-icon">&#x1FA79;</div><div class="routine-info" style="flex:1"><h4>Dermaroller 0.5mm</h4><p>Roll in 3 directions, 10 strokes each.</p><div class="shop-btns"><a class="shop-btn shop-btn-amazon" href="https://www.amazon.com/s?k=dermaroller+0.5mm" target="_blank" rel="noopener">Amazon</a><a class="shop-btn shop-btn-iherb" href="https://www.iherb.com/search?kw=dermaroller+0.5mm" target="_blank" rel="noopener">iHerb</a></div><span class="routine-freq">1x/Week</span></div></div>
-          <div class="routine-item"><div class="routine-icon">&#x1FAD2;</div><div class="routine-info" style="flex:1"><h4>Beard Oil</h4><p>3-5 drops jojoba/argan to damp beard.</p><div class="shop-btns"><a class="shop-btn shop-btn-amazon" href="https://www.amazon.com/s?k=beard+oil+jojoba+argan" target="_blank" rel="noopener">Amazon</a><a class="shop-btn shop-btn-iherb" href="https://www.iherb.com/search?kw=beard+oil+jojoba" target="_blank" rel="noopener">iHerb</a></div><span class="routine-freq">Daily</span></div></div>
-          <div class="routine-item"><div class="routine-icon">&#x1F356;</div><div class="routine-info"><h4>High Protein</h4><p>0.8g per kg daily. Eggs, meat, fish.</p><span class="routine-freq">Daily</span></div></div>
-          <div class="routine-item"><div class="routine-icon">&#x1F634;</div><div class="routine-info"><h4>Sleep 8 Hours</h4><p>Testosterone + DHT peak during deep sleep.</p><span class="routine-freq">Every Night</span></div></div>
-        </div>
-        <!-- SKIN -->
-        <div class="tab-pane" id="s-skin" style="display:none">
-          <div class="eye-note"><div class="eye-note-title">&#x1F9EC; SKIN QUALITY &amp; TIGHTNESS</div><div class="eye-note-text">Skin responds to protein, sleep, hydration and resistance training. Autophagy-based "skin recycling" claims are not supported by current human evidence.</div></div>
-          <div class="section-title">Skin Tightening</div>
-          <div class="card"><div style="display:flex;flex-direction:column;gap:10px">
-            <div style="display:flex;gap:10px;align-items:flex-start"><span>&#x1F4A7;</span><div><strong style="font-size:13px">Hydration Lock</strong><p style="font-size:11px;color:var(--text2)">3-4L water daily, consistently.</p></div></div>
-            <div style="display:flex;gap:10px;align-items:flex-start"><span>&#x1F34B;</span><div><strong style="font-size:13px">Collagen Booster</strong><p style="font-size:11px;color:var(--text2)">Protein (1.2-1.6 g/kg) + Vitamin C.</p></div></div>
-            <div style="display:flex;gap:10px;align-items:flex-start"><span>&#x1F3CB;&#xFE0F;</span><div><strong style="font-size:13px">Resistance Training</strong><p style="font-size:11px;color:var(--text2)">Full-body 2-3x/week. The strongest lever for loose skin.</p></div></div>
-            <div style="display:flex;gap:10px;align-items:flex-start"><span>&#x1FABE;</span><div><strong style="font-size:13px">Dermal Massage</strong><p style="font-size:11px;color:var(--text2)">Jojoba oil with firm circular motions post-shower.</p></div></div>
-          </div></div>
-          <div class="section-title">Japanese Anti-Aging</div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F375; Matcha EGCG</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1F375;</span><span>EGCG protects cells from oxidative stress. 1-2 cups daily.</span></li></ul></div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F30A; Seaweed Minerals</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1F30A;</span><span>Nori/Wakame/Kombu optimize thyroid + skin renewal.</span></li></ul></div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1FAD8; Hara Hachi Bu</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul><li><span>&#x1FAD8;</span><span>"Eat until 80% full." Over-stretching accelerates aging.</span></li></ul></div>
-        </div>
-        <!-- BODY CARE -->
-        <div class="tab-pane" id="s-body" style="display:none">
-          <div class="bp-note"><div class="bp-note-title">&#x1F6CB;&#xFE0F; BODY CARE GOAL</div><div class="bp-note-text">Soft skin, no body odor, healthy overall. Full body care routine.</div></div>
-          <div class="section-title">Daily Routine</div>
-          <div class="routine-step"><div class="routine-step-num" style="background:rgba(124,92,252,.15);color:var(--accent2)">1</div><div class="routine-step-info"><h4>Body Wash</h4><p>Moisturizing body wash, not bar soap. Focus on odor-prone areas.</p></div><span class="routine-freq">Daily</span></div>
-          <div class="routine-step"><div class="routine-step-num" style="background:rgba(46,204,113,.15);color:var(--green2)">2</div><div class="routine-step-info"><h4>Exfoliate</h4><p>Scrub mitt or loofah. Removes dead skin, prevents ingrown hairs.</p></div><span class="routine-freq">2x/Week</span></div>
-          <div class="routine-step"><div class="routine-step-num" style="background:rgba(245,200,66,.15);color:var(--gold)">3</div><div class="routine-step-info"><h4>Body Lotion</h4><p>Apply to damp skin within 3 min of shower. Locks in moisture.</p></div><span class="routine-freq">Daily</span></div>
-          <div class="routine-step"><div class="routine-step-num" style="background:rgba(79,195,247,.15);color:var(--blue)">4</div><div class="routine-step-info"><h4>Deodorant</h4><p>Antiperspirant + deodorant combo. Apply at night for best results.</p></div><span class="routine-freq">Daily</span></div>
-                            <div class="section-title">Odor Control</div>
-          <div class="card"><div style="display:flex;flex-direction:column;gap:8px">
-            <div style="display:flex;gap:10px;align-items:center"><span>&#x1F4A7;</span><span style="font-size:12px;color:var(--text2)">Shave/armpit hair to reduce bacteria habitat</span></div>
-            <div style="display:flex;gap:10px;align-items:center"><span>&#x1F9C2;</span><span style="font-size:12px;color:var(--text2)">Wash clothes after every wear, especially gym clothes</span></div>
-            <div style="display:flex;gap:10px;align-items:center"><span>&#x1F957;</span><span style="font-size:12px;color:var(--text2)">Reduce garlic, onion, curry — affects body odor</span></div>
-            <div style="display:flex;gap:10px;align-items:center"><span>&#x1F48A;</span><span style="font-size:12px;color:var(--text2)">Chlorophyll supplements neutralize body odor internally</span></div>
-          </div></div>
-        </div>
-
-        <!-- STYLE -->
-        <div class="tab-pane" id="s-style" style="display:none">
-          <div class="bp-note"><div class="bp-note-title">&#x1F457; STYLE GOAL</div><div class="bp-note-text">Clean, masculine, well-fitted clothing. Minimal colors, maximum impact.</div></div>
-          <div class="section-title">Color Palette</div>
-          <div class="bp-color-grid">
-            <div class="bp-color-chip" style="background:#1a1a2e">Black</div>
-            <div class="bp-color-chip" style="background:#f0f0ff;color:#1a1a2e">White</div>
-            <div class="bp-color-chip" style="background:#6b7280">Grey</div>
-            <div class="bp-color-chip" style="background:#4a5d23">Olive</div>
-            <div class="bp-color-chip" style="background:#1e3a5f">Navy</div>
-          </div>
-          <div class="section-title">Buy These</div>
-          <div class="bp-buy-grid">
-            <div class="bp-buy-chip">Black T-shirts</div>
-            <div class="bp-buy-chip">White T-shirts</div>
-            <div class="bp-buy-chip">Oversized Shirts</div>
-            <div class="bp-buy-chip">Straight Jeans</div>
-            <div class="bp-buy-chip">Cargo Pants</div>
-            <div class="bp-buy-chip">White Sneakers</div>
-            <div class="bp-buy-chip">Black Sneakers</div>
-            <div class="bp-buy-chip">Watch</div>
-          </div>
-          <div class="section-title">Avoid</div>
-          <div class="bp-avoid-grid">
-            <div class="bp-avoid-chip">&#x1F6AB; Bright colors</div>
-            <div class="bp-avoid-chip">&#x1F6AB; Huge logos</div>
-            <div class="bp-avoid-chip">&#x1F6AB; Baggy clothes</div>
-            <div class="bp-avoid-chip">&#x1F6AB; Busy patterns</div>
-          </div>
-          <div class="card" onclick="switchScreen('products',this)" style="display:flex;align-items:center;gap:10px;cursor:pointer">
-            <span style="font-size:20px">&#x1F33F;</span>
-            <div style="flex:1"><div style="font-size:13px;font-weight:700">Fragrance</div><div style="font-size:11px;color:var(--text3)">Budget, fresh and premium options in Products</div></div>
-            <div style="color:var(--text3);font-size:13px">&#8250;</div>
-          </div>
-          <div class="section-title">Barber Instructions</div>
-          <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x2702;&#xFE0F; Low Taper Fade Guide</h4><span class="collapse-arrow">&#x25BC;</span></div>
-          <div class="collapse-body"><ul>
-            <li><span>&#x1F447;</span><span><strong>Low Taper Fade</strong> — starts low, gradual blend</span></li>
-            <li><span>&#x2702;&#xFE0F;</span><span><strong>2-3 inches on top</strong> — enough for curl definition</span></li>
-            <li><span>&#x1F9D4;</span><span><strong>Blend beard into fade</strong> — seamless transition</span></li>
-            <li><span>&#x1F448;</span><span><strong>Sharp cheek line</strong> — clean beard outline</span></li>
-            <li><span>&#x1F464;</span><span><strong>Natural neckline</strong> — don't go too high</span></li>
-            <li><span>&#x1F52A;</span><span><strong>Natural lineup</strong> — maintain natural hairline</span></li>
-            <li><span>&#x1F487;</span><span><strong>Defined sponge curls</strong> — use curl sponge for texture</span></li>
-          </ul></div>
-        </div>
-
-        <!-- PRODUCTS -->
-        <div class="tab-pane" id="s-products" style="display:none">
-          <div class="bp-note"><div class="bp-note-title">&#x1F6D2; PRODUCTS</div><div class="bp-note-text">Every product the app recommends now lives in one sorted, searchable catalogue.</div></div>
-          <div class="card" onclick="switchScreen('products',this)" style="display:flex;align-items:center;gap:10px;cursor:pointer;margin-bottom:8px">
-            <span style="font-size:20px">&#x1F6D2;</span>
-            <div style="flex:1"><div style="font-size:13px;font-weight:700">Open Products</div><div style="font-size:11px;color:var(--text3)">Filter by category and budget tier</div></div>
-            <div style="color:var(--text3);font-size:13px">&#8250;</div>
-          </div>
-          <div class="section-title">Most Recommended</div>
-          <div class="bp-chips">
-            <div class="bp-chip bp-chip-green">CeraVe Foaming Cleanser</div>
-            <div class="bp-chip bp-chip-green">The Ordinary Niacinamide 10%</div>
-            <div class="bp-chip bp-chip-accent">Beauty of Joseon Relief Sun SPF50+</div>
-            <div class="bp-chip bp-chip-gold">Minoxidil 5%</div>
-            <div class="bp-chip bp-chip-gold">Lattafa Asad</div>
-            <div class="bp-chip bp-chip-accent">Vaseline Cocoa Glow Lotion</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section-title" style="margin-top:16px">Daily Goals</div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:13px;font-weight:700">Today</span><span style="font-size:13px;font-weight:700;color:var(--accent2)" id="goal-count">0/5 done</span></div>
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:14px" id="step-dots"></div>
-      <div id="goals-container"></div>
-      <div style="height:16px"></div>
-
-      <!-- REFERENCE — collapsed by default to keep Home compact -->
-      <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F4D6; Reference &amp; Timeline</h4><span class="collapse-arrow">&#x25BC;</span></div>
-      <div class="collapse-body">
-
-      <!-- PRIORITY ORDER -->
-      <div class="section-title" style="margin-top:4px">Priority Order</div>
-      <div class="card" style="overflow-x:auto;padding:12px"><table class="bp-priority-table"><thead><tr><th>#</th><th>Area</th><th>Impact</th></tr></thead><tbody>
-        <tr><td>&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</td><td style="font-weight:700;color:var(--text)">Lose Body Fat</td><td><span class="pill pill-green">10/10</span></td></tr>
-        <tr><td>&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</td><td style="font-weight:700;color:var(--text)">Haircut</td><td><span class="pill pill-green">9.5/10</span></td></tr>
-        <tr><td>&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</td><td style="font-weight:700;color:var(--text)">Beard</td><td><span class="pill pill-green">9.5/10</span></td></tr>
-        <tr><td>&#x2B50;&#x2B50;&#x2B50;&#x2B50;</td><td style="font-weight:700;color:var(--text)">Skincare</td><td><span class="pill pill-gold">9/10</span></td></tr>
-        <tr><td>&#x2B50;&#x2B50;&#x2B50;&#x2B50;</td><td style="font-weight:700;color:var(--text)">Teeth</td><td><span class="pill pill-gold">8.5/10</span></td></tr>
-        <tr><td>&#x2B50;&#x2B50;&#x2B50;&#x2B50;</td><td style="font-weight:700;color:var(--text)">Fitness</td><td><span class="pill pill-green">9.5/10</span></td></tr>
-        <tr><td>&#x2B50;&#x2B50;&#x2B50;</td><td style="font-weight:700;color:var(--text)">Clothing</td><td><span class="pill pill-gold">8.5/10</span></td></tr>
-        <tr><td>&#x2B50;&#x2B50;&#x2B50;</td><td style="font-weight:700;color:var(--text)">Fragrance</td><td><span class="pill pill-blue">8/10</span></td></tr>
-      </tbody></table></div>
-
-      <!-- DAILY ROUTINE -->
-      <div class="section-title">Daily Routine</div>
-      <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x2600;&#xFE0F; Morning (10 min)</h4><span class="collapse-arrow">&#x25BC;</span></div>
-      <div class="collapse-body"><ul>
-        <li><span>&#x1F9B7;</span><span>Brush teeth (2 min)</span></li>
-        <li><span>&#x1F9F4;</span><span>Wash face + moisturizer + sunscreen</span></li>
-        <li><span>&#x1F487;</span><span>Water on hair + Cantu Leave-In + Mielle Oil + Curl sponge</span></li>
-        <li><span>&#x1F6CB;&#xFE0F;</span><span>Apply deodorant</span></li>
-        <li><span>&#x1F33F;</span><span>Fragrance (2-4 sprays)</span></li>
-      </ul></div>
-      <div class="collapse-header" onclick="toggleCollapse(this)"><h4>&#x1F319; Night (10 min)</h4><span class="collapse-arrow">&#x25BC;</span></div>
-      <div class="collapse-body"><ul>
-        <li><span>&#x1F9F4;</span><span>Wash face + niacinamide serum + moisturizer</span></li>
-        <li><span>&#x1F9D4;</span><span>Apply beard oil</span></li>
-        <li><span>&#x1F487;</span><span>Satin bonnet or silk pillowcase</span></li>
-        <li><span>&#x1F634;</span><span>Sleep by 10PM — 8 hours minimum</span></li>
-      </ul></div>
-
-      <!-- TRANSFORMATION TIMELINE -->
-      <div class="section-title">Transformation Timeline</div>
-      <div class="bp-timeline">
-        <div class="bp-tl-step"><div class="bp-tl-dot" style="background:var(--gold)"></div><div class="bp-tl-info"><h4 style="color:var(--gold)">Week 1-4</h4><p>Hair becomes softer, skin feels more hydrated, grooming looks cleaner.</p></div></div>
-        <div class="bp-tl-step"><div class="bp-tl-dot" style="background:var(--blue)"></div><div class="bp-tl-info"><h4 style="color:var(--blue)">Month 2-3</h4><p>Beard appears neater, curls more defined, complexion healthier.</p></div></div>
-        <div class="bp-tl-step"><div class="bp-tl-dot" style="background:var(--green2)"></div><div class="bp-tl-info"><h4 style="color:var(--green2)">Month 4-6</h4><p>Noticeable body fat loss, face slimmer, jawline more visible, style polished.</p></div></div>
-        <div class="bp-tl-step"><div class="bp-tl-dot" style="background:var(--accent2)"></div><div class="bp-tl-info"><h4 style="color:var(--accent2)">Month 6-12</h4><p>Dramatic improvement. Lean face, sharp fade, well-shaped beard, healthy skin, fitted clothes. Consistency across all areas = maximum impact.</p></div></div>
-      </div>
-      </div>
-      <div style="height:16px"></div>
-    </div>
+    <button id="theme-toggle" class="icon-btn" aria-label="Toggle dark mode" aria-pressed="false">
+      <svg class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+      </svg>
+      <svg class="hidden h-5 w-5 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8Z"/>
+      </svg>
+    </button>
   </div>
+</header>
 
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- PLAN — data-driven from js/data/blueprint.js            -->
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <div class="screen" id="screen-plan">
-    <div class="plan-head">
-      <div class="plan-kicker" id="plan-kicker"></div>
-      <div class="plan-title" id="plan-title"></div>
-      <div class="plan-sub" id="plan-sub"></div>
-      <div class="plan-principles" id="plan-principles"></div>
-    </div>
+<main id="main" class="mx-auto max-w-screen-md px-4 pb-8 pt-3" tabindex="-1">
+  <!-- views are rendered by app.js -->
+  <section id="view-home" class="animate-fade-in" aria-label="Today"></section>
+  <section id="view-plan" class="hidden animate-fade-in" aria-label="Blueprint"></section>
+  <section id="view-library" class="hidden animate-fade-in" aria-label="Library"></section>
+  <section id="view-guides" class="hidden animate-fade-in" aria-label="Deep-dive guides"></section>
+  <section id="view-articles" class="hidden animate-fade-in" aria-label="Articles"></section>
+  <section id="view-food" class="hidden animate-fade-in" aria-label="Nutrition"></section>
+  <section id="view-products" class="hidden animate-fade-in" aria-label="Products"></section>
+  <section id="view-meals" class="hidden animate-fade-in" aria-label="Meals"></section>
 
-    <div class="scroll" id="plan-scroll">
-      <!-- live summary dashboard -->
-      <div class="plan-dash" id="plan-dash"></div>
-
-      <!-- toolbar: search / sort / expand / density -->
-      <div class="bp-toolbar">
-        <div class="bp-search">
-          <span class="bp-search-ic">&#x1F50D;</span>
-          <input type="search" id="plan-search" placeholder="Search the plan..." autocomplete="off">
-          <button class="bp-search-x" id="plan-search-x" aria-label="Clear">&times;</button>
-        </div>
-        <div class="bp-tools">
-          <select id="plan-sort" class="bp-select" aria-label="Sort sections"></select>
-          <button class="bp-tool" id="plan-expand" title="Expand / collapse all">&#x21F1;</button>
-          <button class="bp-tool" id="plan-density" title="Toggle density">&#x2630;</button>
-        </div>
+  <noscript>
+    <div class="card mt-4">
+      <div class="card-header"><h2 class="card-title">JavaScript is required</h2></div>
+      <div class="card-content text-sm text-muted-foreground">
+        GlowUp renders its library from a bundled data layer. Enable JavaScript, or read the source
+        Markdown files in <code class="kbd">research/</code>.
       </div>
-      <div class="bp-results" data-deck-results></div>
-
-      <!-- deck mounts here -->
-      <div class="cat-tabs" data-deck-tabs></div>
-      <div data-deck-group="plan"></div>
-
-      <div class="bp-disclaimer" id="plan-disclaimer"></div>
-      <div style="height:16px"></div>
     </div>
+  </noscript>
+</main>
+
+<!-- ================= Bottom navigation ================= -->
+<nav class="tabbar" aria-label="Primary">
+  <div class="tabbar-inner">
+    <button class="tabbar-item" data-nav="home" aria-current="page">
+      <span class="tabbar-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M9 21v-7h6v7"/></svg></span>Today</button>
+    <button class="tabbar-item" data-nav="plan">
+      <span class="tabbar-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h9a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H9"/><path d="M5 4h2v16H5z"/><path d="m12 9 1.6 1.6L16.5 8"/></svg></span>Plan</button>
+    <button class="tabbar-item" data-nav="learn">
+      <span class="tabbar-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20v3H6.5"/></svg></span>Learn</button>
+    <button class="tabbar-item" data-nav="fuel">
+      <span class="tabbar-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c4-3.2 7-6.4 7-10a7 7 0 1 0-14 0c0 3.6 3 6.8 7 10Z"/><path d="M12 6.5v5"/></svg></span>Fuel</button>
+    <button class="tabbar-item" data-nav="shop">
+      <span class="tabbar-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span>Shop</button>
   </div>
+</nav>
 
-  <!-- TASKS -->
-  <div class="screen" id="screen-tasks">
-    <div class="scroll" style="padding-top:12px">
-      <div class="section-title" style="display:flex;justify-content:space-between;align-items:center">Tasks <button class="btn-ghost" style="font-size:11px;padding:4px 10px;margin:0" onclick="toggleAddTodo()">+ Add</button></div>
-      <div class="todo-filters">
-        <div class="filter-btn active" onclick="filterTodos(this,'all')">All</div>
-        <div class="filter-btn" onclick="filterTodos(this,'face')">Face</div>
-        <div class="filter-btn" onclick="filterTodos(this,'hair')">Hair</div>
-        <div class="filter-btn" onclick="filterTodos(this,'body')">Body</div>
-      </div>
-      <div id="add-todo-panel" style="display:none;margin:0 12px 10px">
-        <div class="add-todo-form" style="margin:0">
-          <h4>New Task</h4>
-          <div class="form-row"><label>Task</label><input type="text" id="new-todo-name" placeholder="e.g. Apply rosemary oil"></div>
-          <div class="two-col">
-            <div class="form-row"><label>Category</label><select id="new-todo-cat"><option value="face">Face</option><option value="hair">Hair</option><option value="body">Body</option></select></div>
-            <div class="form-row"><label>Priority</label><select id="new-todo-pri"><option value="high">High</option><option value="med">Medium</option><option value="low">Low</option></select></div>
-          </div>
-          <button class="btn-primary" onclick="addTodo()">Add Task</button>
-        </div>
-      </div>
-      <div id="todo-list-tasks" style="padding:0 12px"></div>
-      <div class="section-title" style="margin-top:16px">Quick Actions</div>
-      <div style="padding:0 12px">
-        <div class="card" style="display:flex;flex-direction:column;gap:6px">
-          <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:4px">SUGGESTED TASKS</div>
-          <div style="display:flex;gap:8px;align-items:center"><span style="font-size:16px">&#x1F95A;</span><div style="flex:1"><strong style="font-size:12px">Hit protein target</strong><p style="font-size:10px;color:var(--text3)">1.2&ndash;1.6 g/kg across 3 meals</p></div><button class="btn-ghost" style="padding:4px 10px;font-size:10px" onclick="quickAddTodo('Hit protein target','body','high')">+ Add</button></div>
-          <div style="display:flex;gap:8px;align-items:center"><span style="font-size:16px">&#x1F4A7;</span><div style="flex:1"><strong style="font-size:12px">Drink 2L Water</strong><p style="font-size:10px;color:var(--text3)">Hydration for skin &amp; hair</p></div><button class="btn-ghost" style="padding:4px 10px;font-size:10px" onclick="quickAddTodo('Drink 2L Water','body','high')">+ Add</button></div>
-          <div style="display:flex;gap:8px;align-items:center"><span style="font-size:16px">&#x1F6B6;</span><div style="flex:1"><strong style="font-size:12px">30-min brisk walk</strong><p style="font-size:10px;color:var(--text3)">Counts toward 150+ min/week</p></div><button class="btn-ghost" style="padding:4px 10px;font-size:10px" onclick="quickAddTodo('30-min brisk walk','body','high')">+ Add</button></div>
-          <div style="display:flex;gap:8px;align-items:center"><span style="font-size:16px">&#x1F3CB;&#xFE0F;</span><div style="flex:1"><strong style="font-size:12px">Full-body strength</strong><p style="font-size:10px;color:var(--text3)">2&ndash;3 sessions this week</p></div><button class="btn-ghost" style="padding:4px 10px;font-size:10px" onclick="quickAddTodo('Full-body strength','body','high')">+ Add</button></div>
-          <div style="display:flex;gap:8px;align-items:center"><span style="font-size:16px">&#x23F0;</span><div style="flex:1"><strong style="font-size:12px">Close eating window</strong><p style="font-size:10px;color:var(--text3)">Last meal = 12h overnight fast</p></div><button class="btn-ghost" style="padding:4px 10px;font-size:10px" onclick="quickAddTodo('Close eating window','body','med')">+ Add</button></div>
-          <div style="display:flex;gap:8px;align-items:center"><span style="font-size:16px">&#x1F9F4;</span><div style="flex:1"><strong style="font-size:12px">Apply Skincare</strong><p style="font-size:10px;color:var(--text3)">Cleanse + Moisturize + SPF</p></div><button class="btn-ghost" style="padding:4px 10px;font-size:10px" onclick="quickAddTodo('Apply Skincare','face','high')">+ Add</button></div>
-          <div style="display:flex;gap:8px;align-items:center"><span style="font-size:16px">&#x1F634;</span><div style="flex:1"><strong style="font-size:12px">Protect sleep window</strong><p style="font-size:10px;color:var(--text3)">7&ndash;9 hours, no caffeine 8h before</p></div><button class="btn-ghost" style="padding:4px 10px;font-size:10px" onclick="quickAddTodo('Protect sleep window','body','high')">+ Add</button></div>
-          <div style="display:flex;gap:8px;align-items:center"><span style="font-size:16px">&#x1F486;</span><div style="flex:1"><strong style="font-size:12px">Scalp Massage 5 min</strong><p style="font-size:10px;color:var(--text3)">Hair growth stimulant</p></div><button class="btn-ghost" style="padding:4px 10px;font-size:10px" onclick="quickAddTodo('Scalp Massage 5 min','hair','med')">+ Add</button></div>
-        </div>
-      </div>
+<!-- ================= Search overlay ================= -->
+<div id="search-overlay" class="fixed inset-0 z-40 hidden bg-background/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Search GlowUp">
+  <div class="safe-top mx-auto max-w-screen-md">
+    <div class="flex items-center gap-2 border-b border-border px-4 py-2.5">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5 shrink-0 text-muted-foreground"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+      <input id="search-input" type="search" class="no-ring h-11 w-full bg-transparent text-base outline-none placeholder:text-muted-foreground" placeholder="Search everything — creatine, fibre, sleep…" autocomplete="off" enterkeyhint="search" aria-describedby="search-status" />
+      <button id="search-close" class="btn btn-ghost btn-sm">Close</button>
     </div>
-  </div>
-
-  <!-- PRODUCTS -->
-  <div class="screen" id="screen-products">
-    <div class="plan-head">
-      <div class="plan-kicker">Curated &middot; Sorted &middot; No Duplicates</div>
-      <div class="plan-title">Products</div>
-      <div class="plan-sub" id="prod-sub"></div>
-    </div>
-    <div class="scroll" id="prod-scroll">
-      <div class="bp-toolbar">
-        <div class="bp-search">
-          <span class="bp-search-ic">&#x1F50D;</span>
-          <input type="search" id="prod-search" placeholder="Search products..." autocomplete="off">
-          <button class="bp-search-x" id="prod-search-x" aria-label="Clear">&times;</button>
-        </div>
-        <div class="bp-tools">
-          <button class="bp-tool" id="prod-density" title="Toggle density">&#x2630;</button>
-        </div>
-      </div>
-      <div class="bp-results" data-deck-results></div>
-      <div class="cat-tabs" data-deck-tabs></div>
-      <div data-deck-group="shop"></div>
-      <div style="height:16px"></div>
-    </div>
-  </div>
-  <!-- SETTINGS -->
-  <div class="screen" id="screen-settings">
-    <div class="scroll" style="padding-top:12px">
-    <div class="settings-profile">
-      <div class="sp-top"><div class="settings-avatar">&#x1F464;</div><div><div class="sp-name" id="settings-username">GlowUp User</div><div class="sp-email">Your glow up journey</div></div></div>
-      <input type="text" class="profile-name-input" id="profile-name-input" placeholder="Enter your name" onchange="saveUsername()">
-      <div class="sp-stats">
-        <div class="sp-stat"><div class="sp-val" id="sp-streak">0</div><div class="sp-lbl">Streak</div></div>
-        <div class="sp-stat"><div class="sp-val" id="sp-goals">0</div><div class="sp-lbl">Goals</div></div>
-        <div class="sp-stat"><div class="sp-val" id="sp-score">76</div><div class="sp-lbl">Score</div></div>
-      </div>
-    </div>
-    <div class="transform-card">
-      <div id="transform-container">
-        <div class="tc-header"><div class="tc-title">My Transformation</div><div class="tc-badge">Before &amp; After</div></div>
-        <div class="transform-upload" onclick="uploadTransformPhoto()">
-          <span style="font-size:32px">&#x1F4F7;</span>
-          <div class="transform-upload-text">Tap to upload your photo</div>
-        </div>
-        <div class="tc-footer">Track your progress. Upload a before & after photo.</div>
-        <input type="file" id="transform-upload-input" accept="image/*" style="display:none" onchange="handleTransformUpload(event)">
-      </div>
-    </div>
-    <div class="settings-section">
-      <div class="settings-section-title">Appearance</div>
-      <div class="settings-card">
-        <div class="settings-item" onclick="toggleTheme()"><div class="si-icon" style="background:rgba(124,92,252,.15)">&#x1F319;</div><div class="si-info"><div class="si-title">Dark Mode</div><div class="si-sub" id="theme-label">Currently: Dark</div></div><div class="toggle" id="theme-toggle" onclick="event.stopPropagation();toggleTheme()"></div></div>
-        <div class="settings-item" onclick="toggleDensity()"><div class="si-icon" style="background:rgba(46,204,113,.15)">&#x2630;</div><div class="si-info"><div class="si-title">Compact Layout</div><div class="si-sub" id="density-label">Currently: Comfortable</div></div><div class="toggle" id="density-toggle" onclick="event.stopPropagation();toggleDensity()"></div></div>
-        <div class="settings-item" onclick="resetPlanNav()"><div class="si-icon" style="background:rgba(79,195,247,.15)">&#x1F504;</div><div class="si-info"><div class="si-title">Reset Tab Position</div><div class="si-sub">Back to section 1 of the Plan</div></div><div class="si-arrow">&#8250;</div></div>
-      </div>
-    </div>
-    <div class="settings-section">
-      <div class="settings-section-title">Data</div>
-      <div class="settings-card">
-        <div class="settings-item" onclick="exportData()"><div class="si-icon" style="background:rgba(46,204,113,.15)">&#x1F4E4;</div><div class="si-info"><div class="si-title">Export Data</div><div class="si-sub">Download as JSON</div></div><div class="si-arrow">&#8250;</div></div>
-        <div class="settings-item" onclick="importDataClick()"><div class="si-icon" style="background:rgba(79,195,247,.15)">&#x1F4E5;</div><div class="si-info"><div class="si-title">Import Data</div><div class="si-sub">Restore from backup</div></div><div class="si-arrow">&#8250;</div></div>
-        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
-      </div>
-    </div>
-    <div class="settings-section">
-      <div class="settings-section-title">App</div>
-      <div class="settings-card">
-        <div class="settings-item" id="install-btn" onclick="installPWA()" style="display:none"><div class="si-icon" style="background:rgba(46,204,113,.15)">&#x1F4F2;</div><div class="si-info"><div class="si-title">Install App</div><div class="si-sub">Add to home screen</div></div><div class="si-arrow">&#8250;</div></div>
-        <div class="settings-item" onclick="applyUpdate()"><div class="si-icon" style="background:rgba(245,200,66,.15)">&#x1F504;</div><div class="si-info"><div class="si-title">Check Updates</div><div class="si-sub">Version <span id="settings-version">v4.0</span></div></div><div class="si-arrow">&#8250;</div></div>
-        <div class="settings-item" onclick="clearCache()"><div class="si-icon" style="background:rgba(251,146,60,.15)">&#x1F5D1;&#xFE0F;</div><div class="si-info"><div class="si-title">Clear Cache</div><div class="si-sub">Free up storage</div></div><div class="si-arrow">&#8250;</div></div>
-        <div class="settings-item" onclick="toggleNotifications()"><div class="si-icon" style="background:rgba(244,114,182,.15)">&#x1F514;</div><div class="si-info"><div class="si-title">Notifications</div><div class="si-sub" id="notif-label">Reminders on</div></div><div class="toggle" id="notif-toggle" onclick="event.stopPropagation();toggleNotifications()"></div></div>
-      </div>
-    </div>
-    <div class="settings-section">
-      <div class="settings-section-title">Resources</div>
-
-      <div class="resource-card" id="res-yt" onclick="toggleResource('res-yt')">
-        <div class="rc-head"><div class="rc-icon" style="background:rgba(255,0,0,.15)">&#x25B6;&#xFE0F;</div><div class="rc-info"><div class="rc-title">YouTube Tutorials</div><div class="rc-desc">Best glow up video creators</div></div><div class="rc-arrow">&#8250;</div></div>
-        <div class="rc-body">
-          <a class="resource-link" href="https://www.youtube.com/results?search_query=glow+up+transformation+men" target="_blank" rel="noopener"><span class="rl-icon">&#x1F50D;</span>Glow Up Transformations<span class="rl-tag" style="background:rgba(255,0,0,.15);color:#ff4444">YouTube</span></a>
-          <a class="resource-link" href="https://www.youtube.com/results?search_query=mewing+jawline+technique" target="_blank" rel="noopener"><span class="rl-icon">&#x1F9B4;</span>Mewing &amp; Jawline<span class="rl-tag" style="background:rgba(255,0,0,.15);color:#ff4444">YouTube</span></a>
-          <a class="resource-link" href="https://www.youtube.com/results?search_query=skincare+routine+men" target="_blank" rel="noopener"><span class="rl-icon">&#x1F9F4;</span>Skincare Routines<span class="rl-tag" style="background:rgba(255,0,0,.15);color:#ff4444">YouTube</span></a>
-          <a class="resource-link" href="https://www.youtube.com/results?search_query=hair+growth+men+naturally" target="_blank" rel="noopener"><span class="rl-icon">&#x1F487;</span>Hair Growth Tips<span class="rl-tag" style="background:rgba(255,0,0,.15);color:#ff4444">YouTube</span></a>
-          <a class="resource-link" href="https://www.youtube.com/results?search_query=intermittent+fasting+weight+loss" target="_blank" rel="noopener"><span class="rl-icon">&#x26A1;</span>Fasting &amp; Fat Loss<span class="rl-tag" style="background:rgba(255,0,0,.15);color:#ff4444">YouTube</span></a>
-          <a class="resource-link" href="https://www.youtube.com/results?search_query=eye+health+improve+vision+naturally" target="_blank" rel="noopener"><span class="rl-icon">&#x1F441;&#xFE0F;</span>Eye Health<span class="rl-tag" style="background:rgba(255,0,0,.15);color:#ff4444">YouTube</span></a>
-          <a class="resource-link" href="https://www.youtube.com/results?search_query=workout+routine+beginners+home" target="_blank" rel="noopener"><span class="rl-icon">&#x1F3CB;&#xFE0F;</span>Workout Routines<span class="rl-tag" style="background:rgba(255,0,0,.15);color:#ff4444">YouTube</span></a>
-          <a class="resource-link" href="https://www.youtube.com/results?search_query=beard+growth+ tips+men" target="_blank" rel="noopener"><span class="rl-icon">&#x1F9D4;</span>Beard Growth<span class="rl-tag" style="background:rgba(255,0,0,.15);color:#ff4444">YouTube</span></a>
-        </div>
-      </div>
-
-      <div class="resource-card" id="res-art" onclick="toggleResource('res-art')">
-        <div class="rc-head"><div class="rc-icon" style="background:rgba(79,195,247,.15)">&#x1F4F0;</div><div class="rc-info"><div class="rc-title">Articles &amp; Guides</div><div class="rc-desc">In-depth glow up knowledge</div></div><div class="rc-arrow">&#8250;</div></div>
-        <div class="rc-body">
-          <a class="resource-link" href="https://www.healthline.com/nutrition/how-to-gain-weight-for-men" target="_blank" rel="noopener"><span class="rl-icon">&#x1F4AA;</span>Weight Loss Science<span class="rl-tag" style="background:rgba(79,195,247,.15);color:var(--blue)">Article</span></a>
-          <a class="resource-link" href="https://www.healthline.com/health/beard-growth" target="_blank" rel="noopener"><span class="rl-icon">&#x1F9D4;</span>Beard Growth Guide<span class="rl-tag" style="background:rgba(79,195,247,.15);color:var(--blue)">Article</span></a>
-          <a class="resource-link" href="https://www.medicalnewstoday.com/articles/mewing" target="_blank" rel="noopener"><span class="rl-icon">&#x1F9B4;</span>Mewing Research<span class="rl-tag" style="background:rgba(79,195,247,.15);color:var(--blue)">Article</span></a>
-          <a class="resource-link" href="https://www.healthline.com/nutrition/intermittent-fasting-guide" target="_blank" rel="noopener"><span class="rl-icon">&#x26A1;</span>Fasting Science<span class="rl-tag" style="background:rgba(79,195,247,.15);color:var(--blue)">Article</span></a>
-          <a class="resource-link" href="https://www.aao.org/eye-health/tips-prevention/computer-usage" target="_blank" rel="noopener"><span class="rl-icon">&#x1F441;&#xFE0F;</span>Digital Eye Strain<span class="rl-tag" style="background:rgba(79,195,247,.15);color:var(--blue)">Article</span></a>
-        </div>
-      </div>
-
-      <div class="resource-card" id="res-research" onclick="toggleResource('res-research')">
-        <div class="rc-head"><div class="rc-icon" style="background:rgba(124,92,252,.15)">&#x1F52C;</div><div class="rc-info"><div class="rc-title">Research &amp; Studies</div><div class="rc-desc">Science-backed evidence</div></div><div class="rc-arrow">&#8250;</div></div>
-        <div class="rc-body">
-          <a class="resource-link" href="https://pubmed.ncbi.nlm.nih.gov/?term=rate+of+weight+loss+gallstones+risk" target="_blank" rel="noopener"><span class="rl-icon">&#x1F9EC;</span>Rapid Weight Loss &amp; Gallstones<span class="rl-tag" style="background:rgba(124,92,252,.15);color:var(--accent2)">Study</span></a>
-          <a class="resource-link" href="https://pubmed.ncbi.nlm.nih.gov/?term=protein+intake+resistance+training+fat+free+mass+energy+restriction" target="_blank" rel="noopener"><span class="rl-icon">&#x1F95A;</span>Protein + Training for Lean Mass<span class="rl-tag" style="background:rgba(124,92,252,.15);color:var(--accent2)">Study</span></a>
-          <a class="resource-link" href="https://pubmed.ncbi.nlm.nih.gov/?term=intermittent+fasting+vs+calorie+restriction+meta+analysis" target="_blank" rel="noopener"><span class="rl-icon">&#x23F0;</span>Fasting vs Calorie Restriction<span class="rl-tag" style="background:rgba(124,92,252,.15);color:var(--accent2)">Study</span></a>
-          <a class="resource-link" href="https://pubmed.ncbi.nlm.nih.gov/?term=autophagy+human+evidence+review" target="_blank" rel="noopener"><span class="rl-icon">&#x1F52C;</span>Autophagy Evidence in Humans<span class="rl-tag" style="background:rgba(124,92,252,.15);color:var(--accent2)">Study</span></a>
-          <a class="resource-link" href="https://pubmed.ncbi.nlm.nih.gov/?term=SGLT2+inhibitor+fasting+ketoacidosis+euglycemic" target="_blank" rel="noopener"><span class="rl-icon">&#x1F6A8;</span>SGLT2 Inhibitors &amp; Fasting Risk<span class="rl-tag" style="background:rgba(124,92,252,.15);color:var(--accent2)">Study</span></a>
-          <a class="resource-link" href="https://pubmed.ncbi.nlm.nih.gov/?term=waist+circumference+vs+BMI+cardiovascular+risk" target="_blank" rel="noopener"><span class="rl-icon">&#x1F4CF;</span>Waist vs BMI as Risk Marker<span class="rl-tag" style="background:rgba(124,92,252,.15);color:var(--accent2)">Study</span></a>
-        </div>
-      </div>
-
-      <div class="resource-card" id="res-reddit" onclick="toggleResource('res-reddit')">
-        <div class="rc-head"><div class="rc-icon" style="background:rgba(251,146,60,.15)">&#x1F465;</div><div class="rc-info"><div class="rc-title">Reddit Communities</div><div class="rc-desc">Join the glow up movement</div></div><div class="rc-arrow">&#8250;</div></div>
-        <div class="rc-body">
-          <a class="resource-link" href="https://www.reddit.com/r/GlowUps/" target="_blank" rel="noopener"><span class="rl-icon">&#x1F31F;</span>r/GlowUps<span class="rl-tag" style="background:rgba(251,146,60,.15);color:var(--orange)">Reddit</span></a>
-          <a class="resource-link" href="https://www.reddit.com/r/SkincareAddiction/" target="_blank" rel="noopener"><span class="rl-icon">&#x1F9F4;</span>r/SkincareAddiction<span class="rl-tag" style="background:rgba(251,146,60,.15);color:var(--orange)">Reddit</span></a>
-          <a class="resource-link" href="https://www.reddit.com/r/MaleGrooming/" target="_blank" rel="noopener"><span class="rl-icon">&#x2702;&#xFE0F;</span>r/MaleGrooming<span class="rl-tag" style="background:rgba(251,146,60,.15);color:var(--orange)">Reddit</span></a>
-          <a class="resource-link" href="https://www.reddit.com/r/intermittentfasting/" target="_blank" rel="noopener"><span class="rl-icon">&#x26A1;</span>r/intermittentfasting<span class="rl-tag" style="background:rgba(251,146,60,.15);color:var(--orange)">Reddit</span></a>
-          <a class="resource-link" href="https://www.reddit.com/r/loseit/" target="_blank" rel="noopener"><span class="rl-icon">&#x1F4AA;</span>r/loseit<span class="rl-tag" style="background:rgba(251,146,60,.15);color:var(--orange)">Reddit</span></a>
-          <a class="resource-link" href="https://www.reddit.com/r/Fitness/" target="_blank" rel="noopener"><span class="rl-icon">&#x1F3CB;&#xFE0F;</span>r/Fitness<span class="rl-tag" style="background:rgba(251,146,60,.15);color:var(--orange)">Reddit</span></a>
-          <a class="resource-link" href="https://www.reddit.com/r/mewing/" target="_blank" rel="noopener"><span class="rl-icon">&#x1F9B4;</span>r/mewing<span class="rl-tag" style="background:rgba(251,146,60,.15);color:var(--orange)">Reddit</span></a>
-          <a class="resource-link" href="https://www.reddit.com/r/Nootropics/" target="_blank" rel="noopener"><span class="rl-icon">&#x1F9E0;</span>r/Nootropics<span class="rl-tag" style="background:rgba(251,146,60,.15);color:var(--orange)">Reddit</span></a>
-          <a class="resource-link" href="https://www.reddit.com/r/getdisciplined/" target="_blank" rel="noopener"><span class="rl-icon">&#x1F4C5;</span>r/getdisciplined<span class="rl-tag" style="background:rgba(251,146,60,.15);color:var(--orange)">Reddit</span></a>
-          <a class="resource-link" href="https://www.reddit.com/r/tressless/" target="_blank" rel="noopener"><span class="rl-icon">&#x1F487;</span>r/Tressless (Hair Loss)<span class="rl-tag" style="background:rgba(251,146,60,.15);color:var(--orange)">Reddit</span></a>
-        </div>
-      </div>
-
-      <div class="resource-card" id="res-tips" onclick="toggleResource('res-tips')">
-        <div class="rc-head"><div class="rc-icon" style="background:rgba(46,204,113,.15)">&#x1F4A1;</div><div class="rc-info"><div class="rc-title">Quick Tips</div><div class="rc-desc">Daily glow up hacks</div></div><div class="rc-arrow">&#8250;</div></div>
-        <div class="rc-body">
-          <div class="resource-link" style="cursor:default"><span class="rl-icon">&#x1F4A4;</span>Sleep 7-9 hours on a consistent schedule<span class="rl-tag" style="background:rgba(46,204,113,.15);color:var(--green2)">Nightly</span></div>
-          <div class="resource-link" style="cursor:default"><span class="rl-icon">&#x1F6AB;</span>No supplements or "fasting hacks" for fat loss<span class="rl-tag" style="background:rgba(46,204,113,.15);color:var(--green2)">Always</span></div>
-          <div class="resource-link" style="cursor:default"><span class="rl-icon">&#x2600;&#xFE0F;</span>15 min morning sunlight for vitamin D<span class="rl-tag" style="background:rgba(46,204,113,.15);color:var(--green2)">Daily</span></div>
-          <div class="resource-link" style="cursor:default"><span class="rl-icon">&#x1F6AB;</span>Avoid sugary drinks &amp; frequent alcohol<span class="rl-tag" style="background:rgba(46,204,113,.15);color:var(--green2)">Always</span></div>
-          <div class="resource-link" style="cursor:default"><span class="rl-icon">&#x1F6B6;</span>150+ min/week moderate activity or walking<span class="rl-tag" style="background:rgba(46,204,113,.15);color:var(--green2)">Weekly</span></div>
-          <div class="resource-link" style="cursor:default"><span class="rl-icon">&#x1F95A;</span>Protein at all 3 meals, 30-45 g each<span class="rl-tag" style="background:rgba(46,204,113,.15);color:var(--green2)">Daily</span></div>
-          <div class="resource-link" style="cursor:default"><span class="rl-icon">&#x1F9CA;</span>Check in on 7-day average weight + waist weekly<span class="rl-tag" style="background:rgba(46,204,113,.15);color:var(--green2)">Weekly</span></div>
-        </div>
-      </div>
-      <div class="resource-card" id="res-shopping" onclick="toggleResource('res-shopping')">
-        <div class="rc-head"><div class="rc-icon" style="background:rgba(245,200,66,.15)">&#x1F6D2;</div><div class="rc-info"><div class="rc-title">Product Catalogue</div><div class="rc-desc">Every product, filterable by category and tier</div></div><div class="rc-arrow">&#8250;</div></div>
-        <div class="rc-body">
-          <div class="resource-link" style="cursor:pointer" onclick="event.stopPropagation();switchScreen('products',this)"><span class="rl-icon">&#x1F6D2;</span>Open the Products tab<span class="rl-tag" style="background:rgba(245,200,66,.15);color:var(--gold)">Products</span></div>
-          <div class="resource-link" style="cursor:pointer" onclick="event.stopPropagation();switchScreen('products',this)"><span class="rl-icon">&#x1F4B0;</span>Budget tier only<span class="rl-tag" style="background:rgba(46,204,113,.15);color:var(--green2)">Saves money</span></div>
-        </div>
-      </div>
-
-    </div>
-    <div style="text-align:center;padding:20px;font-size:11px;color:var(--text3)">GlowUp Blueprint &copy; 2026<br>Made with &#x1F49C; for your glow up</div>
-    <div style="height:16px"></div>
-    </div>
-  </div>
-
-  <!-- NAV -->
-  <div class="nav">
-    <button class="nav-btn active" data-screen="home" onclick="switchScreen('home',this)"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></button>
-    <button class="nav-btn" data-screen="plan" onclick="switchScreen('plan',this)"><svg viewBox="0 0 24 24"><path d="M9 2h6a1 1 0 0 1 1 1v2H8V3a1 1 0 0 1 1-1z"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h4"/></svg><span>Plan</span></button>
-    <button class="nav-btn" data-screen="products" onclick="switchScreen('products',this)"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span>Products</span></button>
-    <button class="nav-btn" data-screen="tasks" onclick="switchScreen('tasks',this)"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Tasks</span></button>
-    <button class="nav-btn" data-screen="settings" onclick="switchScreen('settings',this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>More</span></button>
+    <div id="search-scope" class="chip-row px-4 pt-2"></div>
+    <p id="search-status" class="px-4 pt-2 text-xs text-muted-foreground" role="status" aria-live="polite"></p>
+    <div id="search-results" class="px-4 pb-24 pt-2"></div>
   </div>
 </div>
-<script type="module" src="/js/app.js"></script>
+
+<!-- ================= Detail sheet ================= -->
+<div id="sheet-overlay" class="overlay hidden" hidden></div>
+<div id="sheet" class="sheet hidden" role="dialog" aria-modal="true" aria-labelledby="sheet-title" hidden>
+  <div class="sheet-handle"></div>
+  <button id="sheet-close" class="btn btn-ghost btn-icon sheet-close" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+  </button>
+  <div id="sheet-body" class="px-4 pt-4"></div>
+</div>
+
+<!-- ================= Toast ================= -->
+<div id="toast" class="pointer-events-none fixed inset-x-0 bottom-20 z-50 flex justify-center px-4" role="status" aria-live="polite"></div>
+
+<!-- Offline banner -->
+<div id="offline-banner" class="hidden fixed inset-x-0 top-0 z-40 bg-[hsl(var(--grade-mod))] px-4 py-1 text-center text-micro font-semibold text-black">
+  Offline — showing the cached GlowUp library
+</div>
+
+<script src="art.js"></script>
+<script src="copy.js"></script>
+<script src="guides.js"></script>
+<script src="plan.js"></script>
+<script src="topics.js"></script>
+<script src="data.js"></script>
+<script src="assets/app.js"></script>
 </body>
 </html>

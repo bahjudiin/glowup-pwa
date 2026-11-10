@@ -1,0 +1,7 @@
+# Python dependencies for the GlowUp build pipeline.
+#
+#   python -m pip install -r requirements.txt
+#
+# art.py needs Pillow to read image dimensions for the artwork layer.
+# extract.py and build_standalone.py use only the standard library.
+Pillow>=10.0

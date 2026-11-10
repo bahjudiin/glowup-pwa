@@ -1,0 +1,27 @@
+{
+  "name": "GlowUp — Men's Transformation Library",
+  "short_name": "GlowUp",
+  "description": "Evidence-graded men's fat-loss, muscle, maintenance and glow-up library: 34 articles, 18 products with cost-per-serving maths, 26 USDA foods and 5 meal templates.",
+  "id": "/glowup/",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "portrait-primary",
+  "background_color": "#0e0c16",
+  "theme_color": "#0e0c16",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["health", "fitness", "lifestyle", "education"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Articles", "short_name": "Articles", "url": "./index.html#articles", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Nutrition", "short_name": "Food", "url": "./index.html#food", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Products", "short_name": "Products", "url": "./index.html#products", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Meals", "short_name": "Meals", "url": "./index.html#meals", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

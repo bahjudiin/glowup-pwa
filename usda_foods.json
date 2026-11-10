@@ -1,0 +1,187 @@
+{
+ "_comment": "USDA FoodData Central SR Legacy values per 100 g, keyed by food name. Generated from data.js; used as the offline fallback for extract.py when the external lookup tool is unavailable. Regenerate with: node scripts/build-usda-cache.cjs",
+ "foods": {
+  "Chicken breast, roasted": {
+   "fdcId": 171477,
+   "kcal": 165,
+   "protein": 31.02,
+   "fibre": 0,
+   "water": 65.26
+  },
+  "Egg, whole, raw": {
+   "fdcId": 171287,
+   "kcal": 143,
+   "protein": 12.56,
+   "fibre": 0,
+   "water": 76.15
+  },
+  "Milk, whole": {
+   "fdcId": 171265,
+   "kcal": 61,
+   "protein": 3.15,
+   "fibre": 0,
+   "water": 88.13
+  },
+  "Greek yoghurt, plain low-fat": {
+   "fdcId": 170903,
+   "kcal": 73,
+   "protein": 9.95,
+   "fibre": 0,
+   "water": 83.56
+  },
+  "Cottage cheese, 1%": {
+   "fdcId": 173417,
+   "kcal": 72,
+   "protein": 12.39,
+   "fibre": 0,
+   "water": 82.48
+  },
+  "Lentils, cooked": {
+   "fdcId": 172421,
+   "kcal": 116,
+   "protein": 9.02,
+   "fibre": 7.9,
+   "water": 69.64
+  },
+  "Chickpeas, cooked": {
+   "fdcId": 173757,
+   "kcal": 164,
+   "protein": 8.86,
+   "fibre": 7.6,
+   "water": 60.21
+  },
+  "Kidney beans, cooked": {
+   "fdcId": 173740,
+   "kcal": 127,
+   "protein": 8.67,
+   "fibre": 6.4,
+   "water": 66.94
+  },
+  "Black beans, cooked": {
+   "fdcId": 173735,
+   "kcal": 132,
+   "protein": 8.86,
+   "fibre": 8.7,
+   "water": 65.74
+  },
+  "Oats, dry": {
+   "fdcId": 173904,
+   "kcal": 379,
+   "protein": 13.15,
+   "fibre": 10.1,
+   "water": 10.84
+  },
+  "Brown rice, cooked": {
+   "fdcId": 169704,
+   "kcal": 123,
+   "protein": 2.74,
+   "fibre": 1.6,
+   "water": 70.27
+  },
+  "White rice, cooked": {
+   "fdcId": 169753,
+   "kcal": 130,
+   "protein": 2.69,
+   "fibre": 0.4,
+   "water": 68.44
+  },
+  "Whole-wheat bread": {
+   "fdcId": 172688,
+   "kcal": 252,
+   "protein": 12.45,
+   "fibre": 6,
+   "water": 39.01
+  },
+  "Potato, baked with skin": {
+   "fdcId": 170093,
+   "kcal": 93,
+   "protein": 2.5,
+   "fibre": 2.2,
+   "water": 74.89
+  },
+  "Sweet potato, raw": {
+   "fdcId": 168482,
+   "kcal": 86,
+   "protein": 1.57,
+   "fibre": 3,
+   "water": 77.28
+  },
+  "Tofu, firm": {
+   "fdcId": 172475,
+   "kcal": 144,
+   "protein": 17.27,
+   "fibre": 2.3,
+   "water": 69.83
+  },
+  "Sardines, canned in oil": {
+   "fdcId": 175139,
+   "kcal": 208,
+   "protein": 24.62,
+   "fibre": 0,
+   "water": 59.61
+  },
+  "Tuna, canned in water": {
+   "fdcId": 171986,
+   "kcal": 116,
+   "protein": 25.51,
+   "fibre": 0,
+   "water": 75.21
+  },
+  "Salmon, Atlantic, farmed, cooked": {
+   "fdcId": 175168,
+   "kcal": 206,
+   "protein": 22.1,
+   "fibre": 0,
+   "water": 64.75
+  },
+  "Beef, ground 90% lean, cooked": {
+   "fdcId": 171793,
+   "kcal": 204,
+   "protein": 25.21,
+   "fibre": 0,
+   "water": 63.21
+  },
+  "Pork loin, cooked": {
+   "fdcId": 168250,
+   "kcal": 143,
+   "protein": 26.17,
+   "fibre": 0,
+   "water": 69.45
+  },
+  "Spinach, raw": {
+   "fdcId": 168462,
+   "kcal": 23,
+   "protein": 2.86,
+   "fibre": 2.2,
+   "water": 91.4
+  },
+  "Broccoli, raw": {
+   "fdcId": 170379,
+   "kcal": 34,
+   "protein": 2.82,
+   "fibre": 2.6,
+   "water": 89.3
+  },
+  "Cabbage, raw": {
+   "fdcId": 169975,
+   "kcal": 25,
+   "protein": 1.28,
+   "fibre": 2.5,
+   "water": 92.18
+  },
+  "Carrots, raw": {
+   "fdcId": 170393,
+   "kcal": 41,
+   "protein": 0.93,
+   "fibre": 2.8,
+   "water": 88.29
+  },
+  "Banana, raw": {
+   "fdcId": 173944,
+   "kcal": 89,
+   "protein": 1.09,
+   "fibre": 2.6,
+   "water": 74.91
+  }
+ }
+}

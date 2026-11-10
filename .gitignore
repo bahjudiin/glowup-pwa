@@ -1,18 +1,24 @@
+# Build output
+node_modules
+dist
+.next
+out
+.vercel
+
+# Generated intermediate (data.js and art.js ARE committed - they are the shipped artifacts)
+data.json
+
+# Python
+__pycache__/
+*.pyc
+
 # Logs
-logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
+# Editor / OS
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -23,5 +29,6 @@ dist-ssr
 *.sln
 *.sw?
 
-.vercel
-shots
+# Secrets
+.env
+.env*.local
