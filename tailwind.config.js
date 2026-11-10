@@ -20,27 +20,29 @@ module.exports = {
       },
       borderRadius: {
         none: "0px",
-        sm: "8px",          /* compact utility — Apple {rounded.sm} */
-        md: "11px",         /* pearl capsule */
-        lg: "var(--radius)",/* utility cards — 18px */
-        pill: "9999px",     /* CTAs, chips, inputs */
+        sm: "8px",           /* compact utility */
+        md: "12px",          /* inner surfaces, tiles */
+        lg: "var(--radius)", /* cards — 16px */
+        pill: "9999px",      /* CTAs, chips, inputs */
       },
       fontSize: {
-        /* Apple's reading pace: 17px body, 14px caption, tight display */
-        micro: ["11px", { lineHeight: "1.3", letterSpacing: "-0.08px" }],
-        xs: ["13px", { lineHeight: "1.42", letterSpacing: "-0.12px" }],
-        sm: ["15px", { lineHeight: "1.45", letterSpacing: "-0.224px" }],
-        base: ["17px", { lineHeight: "1.47", letterSpacing: "-0.374px" }],
-        lg: ["21px", { lineHeight: "1.19", letterSpacing: "0.231px" }],
-        xl: ["24px", { lineHeight: "1.16", letterSpacing: "-0.2px" }],
-        "2xl": ["28px", { lineHeight: "1.12", letterSpacing: "-0.374px" }],
-        "3xl": ["34px", { lineHeight: "1.1", letterSpacing: "-0.5px" }],
-        "4xl": ["40px", { lineHeight: "1.08", letterSpacing: "-0.6px" }],
+        /* WattVision: body 14px, titles 24px, labels 11-13px.
+           The scale is 8px-grid friendly at the surfaces that matter. */
+        micro: ["11px", { lineHeight: "1.35", letterSpacing: "0.02em" }],
+        xs: ["12px", { lineHeight: "1.45", letterSpacing: "0" }],
+        sm: ["13px", { lineHeight: "1.5", letterSpacing: "0" }],
+        base: ["14px", { lineHeight: "1.55", letterSpacing: "0" }],
+        lg: ["16px", { lineHeight: "1.35", letterSpacing: "-0.01em" }],
+        xl: ["24px", { lineHeight: "1.2", letterSpacing: "-0.02em" }],
+        "2xl": ["28px", { lineHeight: "1.15", letterSpacing: "-0.02em" }],
+        "3xl": ["32px", { lineHeight: "1.1", letterSpacing: "-0.02em" }],
+        "4xl": ["40px", { lineHeight: "1.05", letterSpacing: "-0.02em" }],
       },
       fontFamily: {
-        /* SF Pro on Apple hardware; system-ui everywhere else (see DESIGN.md) */
-        sans: ["-apple-system", "BlinkMacSystemFont", "SF Pro Text", "SF Pro Display", "system-ui", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
-        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "monospace"],
+        /* Inter for everything; JetBrains Mono for numbers (KPIs, prices,
+           dosages, tables). Both self-hosted in assets/fonts/. */
+        sans: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
+        mono: ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "monospace"],
       },
       letterSpacing: { tightest: "-0.022em", apple: "-0.374px" },
       keyframes: {

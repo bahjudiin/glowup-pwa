@@ -16,7 +16,10 @@
     "build:all": "npm run build && npm run build:standalone",
     "usda:cache": "node scripts/build-usda-cache.cjs",
     "test:e2e": "node scripts/verify-app.mjs",
-    "test:all": "npm run test && npm run test:queries && npm run test:standalone"
+    "test:all": "npm run test && npm run test:queries && npm run test:standalone && npm run test:e2e && npm run test:design",
+    "test:design": "node scripts/verify-design.mjs",
+    "shots:design": "node scripts/shots-design.mjs",
+    "fonts": "node scripts/fetch-fonts.mjs ."
   },
   "devDependencies": {
     "playwright-core": "^1.47.2",

@@ -32,6 +32,7 @@ def js_safe(text):
 html = read("index.html")
 css = read("assets/app.css")
 app_js = read("assets/app.js")
+fonts_css = read("assets/fonts.css")
 data_js = read("data.js")
 art_js = read("art.js")
 copy_js = read("copy.js")
@@ -101,6 +102,24 @@ inline_scripts = (
     "<script>\n" + js_safe(app_js) + "\n</script>"
 )
 out = out.replace('<script src="art.js"></script>\n<script src="copy.js"></script>\n<script src="guides.js"></script>\n<script src="plan.js"></script>\n<script src="topics.js"></script>\n<script src="data.js"></script>\n<script src="assets/app.js"></script>', inline_scripts)
+# 2b. webfonts -> data URIs, so the standalone file makes zero network requests
+_fonts_dir = os.path.join(HERE, "assets", "fonts")
+_font_inlined = 0
+for _fname in sorted(os.listdir(_fonts_dir)) if os.path.isdir(_fonts_dir) else []:
+    if not _fname.endswith(".woff2"):
+        continue
+    with open(os.path.join(_fonts_dir, _fname), "rb") as _fh:
+        _b64 = base64.b64encode(_fh.read()).decode("ascii")
+    fonts_css = fonts_css.replace(
+        'url("/assets/fonts/%s")' % _fname,
+        'url("data:font/woff2;base64,%s")' % _b64,
+    )
+    _font_inlined += 1
+out = out.replace(
+    '<link rel="stylesheet" href="assets/fonts.css" />',
+    "<style>/* WattVision webfonts - inlined for the standalone build */\n" + fonts_css + "</style>",
+)
+
 assert "assets/app.css" not in out and "assets/app.js" not in out and 'src="data.js"' not in out and 'src="art.js"' not in out and 'src="copy.js"' not in out and 'src="guides.js"' not in out and 'src="plan.js"' not in out and 'src="topics.js"' not in out
 
 # 4. manifest injected at runtime as a Blob (harmless on file://, used when hosted)
@@ -130,6 +149,7 @@ with open(OUT, "w", encoding="utf-8", newline="\n") as fh:
 
 kb = os.path.getsize(OUT) / 1024
 print(f"wrote {OUT} ({kb:.0f} KB)")
+print(f"  fonts {_font_inlined} inlined")
 print(f"  css {len(css)/1024:.0f} KB · js {len(app_js)/1024:.0f} KB · data {len(data_js)/1024:.0f} KB")
 _ext = len(re.findall(r'(src|href)="(?!data:|#)', out))
 print(f"  external requests: {_ext}")

@@ -707,6 +707,59 @@ when narration starts so the highlighted sentence is visible.
 - The generated artefacts (`art.js`, `data.json`) are now written with LF endings, so a
   rebuild on Windows does not produce a spurious diff.
 
+## 10h. Round 13 — WattVision design system
+
+The visual language is now a technical-monitoring dashboard rather than a consumer app:
+hairline borders instead of shadows, one cyan accent for data and actions, lime for
+live/normal, red for alerts, and monospaced numerals wherever a number is the point.
+
+### Palette
+
+| Token | Dark (primary) | Light |
+|---|---|---|
+| Canvas | `#121212` | `#FFFFFF` |
+| Card surface | `#1E1E1E` | `#F7F7F8` |
+| Hairline / border | `#2C2C2E` | `#E2E2E6` |
+| Primary accent (data, actions) | `#00E5FF` | `#0097B2` (darkened for AA on white) |
+| Live / normal | `#32D74B` | `#1E8E3E` |
+| Alert | `#FF453A` | `#D93025` |
+| Alert surface | `#3A1C1C` | `#FDECEA` |
+| Row hover | `#252525` | `#F0F0F3` |
+| Text / muted | `#FFFFFF` / `#98989D` | `#121212` / `#6B6B70` |
+
+Every value is an exact conversion of the hex above — `scripts/verify-design.mjs` asserts
+the rendered pixels, so a token cannot drift silently.
+
+### Type
+
+| Role | Face | Size |
+|---|---|---|
+| Titles | Inter, 600 | 24px |
+| Body | Inter, 400 | 14px |
+| KPI numerals, prices, table figures | JetBrains Mono, 700 | 32px hero / 16px tile |
+
+Both faces are **self-hosted** in `assets/fonts/` (latin subset, ~163 KB total), so the app
+makes no external font requests. `build_standalone.py` inlines them as data URIs, which keeps
+the single-file build at zero network requests. Regenerate with `npm run fonts`.
+
+### Components
+
+- Cards: 16px radius, 20px padding, 1px hairline border, no shadow.
+- Rows, tiles and check rows: 12px radius, hairline border, hover `#252525`.
+- Tables: 1px row rules on `#2C2C2E`, row hover `#252525`, sticky header on the card surface.
+- Alerts: `#3A1C1C` surface, `#FF453A` text, 4px left rule.
+- Progress rings and bars: cyan data, lime for "good", hairline grid.
+- Spacing follows an 8px rhythm at the surfaces that carry it.
+- Icons are technical — a lightning bolt for the brand mark, a flame for Fuel — not generic
+  lightbulbs.
+
+### Checks
+
+`npm run test:design` asserts the rendered result in both themes: canvas, text, card radius,
+card border, KPI face/weight/size, title size, the three accent semantics, row hover, alert
+surface, chart colour, and that both webfonts actually loaded.
+`npm run shots:design` writes screenshots of Today / Library / article / Fuel in both themes.
+
 ## 11. Known limitations / next steps
 
 1. Article bodies are excerpts (summary, key points, safety, citations) — not the full Markdown.

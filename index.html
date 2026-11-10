@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>GlowUp — Men's Transformation Library</title>
-<meta name="description" content="Evidence-graded men's fat-loss, muscle, maintenance and glow-up library: 34 articles across 11 categories, 18 verified products with cost-per-serving maths, 26 USDA nutrition entries and 5 meal templates." />
-<meta name="theme-color" content="#0e0c16" media="(prefers-color-scheme: dark)" />
-<meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)" />
+<title>GlowUp ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Men's Transformation Library</title>
+<meta name="description" content="Evidence-graded men's fat-loss, muscle, maintenance and glow-up library: 38 articles across 12 categories, 18 verified products with cost-per-serving maths, 26 USDA nutrition entries and 5 meal templates." />
+<meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
 <meta name="color-scheme" content="light dark" />
 
 <!-- PWA -->
@@ -19,11 +19,12 @@
 <link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png" />
 
 <meta property="og:type" content="website" />
-<meta property="og:title" content="GlowUp — Men's Transformation Library" />
-<meta property="og:description" content="34 evidence-graded articles, 18 products with verified prices and cost-per-serving maths, 26 USDA foods and 5 meal templates. Installable, works offline." />
+<meta property="og:title" content="GlowUp ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Men's Transformation Library" />
+<meta property="og:description" content="38 evidence-graded articles, 18 products with verified prices and cost-per-serving maths, 26 USDA foods and 5 meal templates. Installable, works offline." />
 <meta property="og:image" content="icons/og-image.png" />
 <meta name="twitter:card" content="summary_large_image" />
 
+<link rel="stylesheet" href="assets/fonts.css" />
 <link rel="stylesheet" href="assets/app.css" />
 
 <!-- glowup:standalone-flag -->
@@ -51,9 +52,8 @@
   <div class="app-bar-inner mx-auto max-w-screen-md">
     <div class="app-bar-brand">
       <span aria-hidden="true" class="app-bar-mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" class="h-4 w-4">
-          <path d="M12 3v2M12 19v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M3 12h2M19 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
-          <circle cx="12" cy="12" r="3.4"/>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+          <path d="M13 2 4.5 13.5H11l-1 8.5 8.5-11.5H12z"/>
         </svg>
       </span>
       <div class="min-w-0">
@@ -109,7 +109,7 @@
     <button class="tabbar-item" data-nav="learn">
       <span class="tabbar-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20v3H6.5"/></svg></span>Learn</button>
     <button class="tabbar-item" data-nav="fuel">
-      <span class="tabbar-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c4-3.2 7-6.4 7-10a7 7 0 1 0-14 0c0 3.6 3 6.8 7 10Z"/><path d="M12 6.5v5"/></svg></span>Fuel</button>
+      <span class="tabbar-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3.5 4 5 4 9a4 4 0 0 1-8 0c0-1.5.6-2.7 1.5-3.8C10.6 5.4 12 3.9 12 2Z"/><path d="M12 22a7 7 0 0 0 7-7c0-3.4-2.2-5.6-4.4-7.6.3 2.1-.6 3.5-1.8 4.4-.5-1.6-.4-3-.2-4.4C10.3 9.5 8 12.2 8 15a7 7 0 0 0 4 7Z"/></svg></span>Fuel</button>
     <button class="tabbar-item" data-nav="shop">
       <span class="tabbar-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span>Shop</button>
   </div>
@@ -120,7 +120,7 @@
   <div class="safe-top mx-auto max-w-screen-md">
     <div class="flex items-center gap-2 border-b border-border px-4 py-2.5">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5 shrink-0 text-muted-foreground"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
-      <input id="search-input" type="search" class="no-ring h-11 w-full bg-transparent text-base outline-none placeholder:text-muted-foreground" placeholder="Search everything — creatine, fibre, sleep…" autocomplete="off" enterkeyhint="search" aria-describedby="search-status" />
+      <input id="search-input" type="search" class="no-ring h-11 w-full bg-transparent text-base outline-none placeholder:text-muted-foreground" placeholder="Search everything ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â creatine, fibre, sleepÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦" autocomplete="off" enterkeyhint="search" aria-describedby="search-status" />
       <button id="search-close" class="btn btn-ghost btn-sm">Close</button>
     </div>
     <div id="search-scope" class="chip-row px-4 pt-2"></div>
@@ -144,7 +144,7 @@
 
 <!-- Offline banner -->
 <div id="offline-banner" class="hidden fixed inset-x-0 top-0 z-40 bg-[hsl(var(--grade-mod))] px-4 py-1 text-center text-micro font-semibold text-black">
-  Offline — showing the cached GlowUp library
+  Offline ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â showing the cached GlowUp library
 </div>
 
 <script src="art.js"></script>
