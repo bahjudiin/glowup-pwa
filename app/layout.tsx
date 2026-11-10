@@ -1,28 +1,23 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
-
 export const metadata: Metadata = {
   title: "GlowUp — Men's Transformation Research Library",
-  description: "Evidence-based men's transformation, fat loss, muscle, nutrition, supplements, skincare and product directory.",
+  description:
+    "Evidence-based men's transformation: fat loss, muscle, nutrition, supplements, sleep, Big D vitality, skincare and a verified product directory.",
   openGraph: {
     title: "GlowUp — Men's Transformation Research Library",
-    description: "Evidence-based men's transformation guide with categories, filters, products, foods and meal templates.",
+    description:
+      "Evidence-based men's transformation guide with categories, sub-sections, filters, products, foods and meal templates.",
     type: "website",
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased selection:bg-primary selection:text-white`}>
+      <body className="font-sans antialiased selection:bg-primary selection:text-primary-foreground pb-24">
         <Providers>{children}</Providers>
       </body>
     </html>

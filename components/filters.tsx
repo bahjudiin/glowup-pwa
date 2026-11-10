@@ -1,30 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Filter, SlidersHorizontal, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Filter, SlidersHorizontal } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectTrigger, SelectValue, SelectItem } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { COST_TIERS, EVIDENCE_GRADES } from "@/lib/data/queries";
+
+const ANY = "any";
 
 const EVIDENCE_OPTIONS = [
-  { id: "", label: "All evidence" },
-  { id: "High", label: "High" },
-  { id: "Moderate", label: "Moderate" },
-  { id: "Moderate-High", label: "Moderate-High" },
-  { id: "Low", label: "Low" },
-  { id: "Very low", label: "Very low" },
-  { id: "Insufficient", label: "Insufficient" },
+  { id: ANY, label: "All evidence" },
+  ...EVIDENCE_GRADES.map((grade) => ({ id: grade, label: grade })),
 ];
 
 const COST_OPTIONS = [
-  { id: "", label: "All cost" },
-  { id: "Free", label: "Free" },
-  { id: "Very low", label: "Very low" },
-  { id: "Low", label: "Low" },
-  { id: "Moderate", label: "Moderate" },
-  { id: "High", label: "High" },
-  { id: "Very high", label: "Very high" },
+  { id: ANY, label: "All cost" },
+  ...COST_TIERS.map((tier) => ({ id: tier, label: tier })),
 ];
 
 export function Filters() {
@@ -37,22 +35,30 @@ export function Filters() {
   const currentCost = searchParams.get("cost") || "";
   const currentVerified = searchParams.get("verified") === "true";
 
-  const [evidence, setEvidence] = useState(currentEvidence);
-  const [cost, setCost] = useState(currentCost);
+  const [evidence, setEvidence] = useState(currentEvidence || ANY);
+  const [cost, setCost] = useState(currentCost || ANY);
   const [verified, setVerified] = useState(currentVerified);
 
   useEffect(() => {
-    setEvidence(currentEvidence);
-    setCost(currentCost);
+    setEvidence(currentEvidence || ANY);
+    setCost(currentCost || ANY);
     setVerified(currentVerified);
   }, [currentEvidence, currentCost, currentVerified]);
 
+  const push = (params: URLSearchParams) => {
+    const query = params.toString();
+    router.push(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  };
+
   const apply = () => {
     const params = new URLSearchParams(searchParams.toString());
-    if (evidence) params.set("evidence", evidence); else params.delete("evidence");
-    if (cost) params.set("cost", cost); else params.delete("cost");
-    params.set("verified", verified ? "true" : "false");
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    if (evidence && evidence !== ANY) params.set("evidence", evidence);
+    else params.delete("evidence");
+    if (cost && cost !== ANY) params.set("cost", cost);
+    else params.delete("cost");
+    if (verified) params.set("verified", "true");
+    else params.delete("verified");
+    push(params);
     setOpen(false);
   };
 
@@ -61,14 +67,14 @@ export function Filters() {
     params.delete("evidence");
     params.delete("cost");
     params.delete("verified");
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-    setEvidence("");
-    setCost("");
+    push(params);
+    setEvidence(ANY);
+    setCost(ANY);
     setVerified(false);
     setOpen(false);
   };
 
-  const hasActive = Boolean(evidence || cost || verified);
+  const hasActive = Boolean(currentEvidence || currentCost || currentVerified);
 
   return (
     <div className="relative w-full max-w-md">
@@ -89,9 +95,17 @@ export function Filters() {
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setOpen(false)} />
-          <div className="relative w-full max-w-md mx-4 rounded-2xl border border-input bg-card p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setOpen(false)}
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Filters"
+            className="relative w-full max-w-md mx-4 rounded-2xl border border-input bg-card p-6 shadow-2xl"
+          >
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-semibold">Filters</h3>
               <button
@@ -111,11 +125,13 @@ export function Filters() {
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Any grade" />
                   </SelectTrigger>
-                  <EVIDENCE_OPTIONS.map((o) => (
-                    <SelectItem key={o.id} value={o.id}>
-                      {o.label}
-                    </SelectItem>
-                  ))}
+                  <SelectContent>
+                    {EVIDENCE_OPTIONS.map((o) => (
+                      <SelectItem key={o.id} value={o.id}>
+                        {o.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
               </div>
 
@@ -127,11 +143,13 @@ export function Filters() {
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Any cost" />
                   </SelectTrigger>
-                  {COST_OPTIONS.map((o) => (
-                    <SelectItem key={o.id} value={o.id}>
-                      {o.label}
-                    </SelectItem>
-                  ))}
+                  <SelectContent>
+                    {COST_OPTIONS.map((o) => (
+                      <SelectItem key={o.id} value={o.id}>
+                        {o.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
               </div>
 
@@ -144,14 +162,17 @@ export function Filters() {
                   />
                   <span className="text-sm">Verified prices only</span>
                 </div>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-xs text-muted-foreground text-right">
                   iHerb prices checked 1 Nov 2026
                 </span>
               </div>
             </div>
 
             <div className="mt-6 flex gap-2">
-              <button onClick={apply} className="flex-1 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium">
+              <button
+                onClick={apply}
+                className="flex-1 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium"
+              >
                 Apply
               </button>
               <button

@@ -1,11 +1,7 @@
 node_modules
+.next
+out
+.vercel
 .env
+.env*.local
 *.log
-app/
-components/
-lib/
-next.config.ts
-tailwind.config.ts
-tsconfig.json
-postcss.config.js
-DEPLOY_VERCEL.md

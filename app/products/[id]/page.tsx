@@ -1,14 +1,14 @@
 import { notFound } from "next/navigation";
 import { PRODUCT_BY_ID } from "@/lib/data/products";
 import Link from "next/link";
+import { Suspense } from "react";
 import { Navbar } from "@/components/navbar";
 import { SearchBar } from "@/components/search-bar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { ExternalLink, DollarSign, ShieldCheck, Clock } from "lucide.react";
+import { ExternalLink, X } from "lucide-react";
 
-export default function ProductDetailPage({
+export default async function ProductDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -20,7 +20,11 @@ export default function ProductDetailPage({
 
   return (
     <div className="min-h-screen bg-background">
-      <SearchBar className="mx-auto" />
+      <div className="pt-4">
+        <Suspense fallback={<div className="mx-auto h-10 max-w-md" />}>
+          <SearchBar className="mx-auto" />
+        </Suspense>
+      </div>
       <div className="max-w-3xl mx-auto px-4 py-6">
         <Link
           href="/products"

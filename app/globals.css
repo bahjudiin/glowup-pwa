@@ -4,6 +4,10 @@
 
 @layer base {
   :root {
+    /* Font stacks — kept local so the build never needs to download a font. */
+    --font-inter: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-roboto-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
     --background: 0 0 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0 100%;
@@ -86,6 +90,15 @@
   scrollbar-width: none;
 }
 
+/*
+ * Home page: while a search is running the results take over the top of the
+ * page and the browse chrome collapses. The chrome stays in the server HTML
+ * so crawlers still see it.
+ */
+[data-search="1"] .home-chrome {
+  display: none;
+}
+
 /* Mobile-safe tap targets */
 button, [role="button"] {
   touch-action: manipulation;
@@ -95,4 +108,45 @@ button, [role="button"] {
 .focus-ring:focus-visible {
   outline: 2px solid #7c5cfc;
   outline-offset: 2px;
+}
+
+/* Rendered markdown (see lib/markdown.ts) */
+.article-body {
+  @apply text-[15px] leading-relaxed text-foreground/90;
+}
+.article-body h1 {
+  @apply mt-8 mb-3 text-2xl font-semibold tracking-tight first:mt-0;
+}
+.article-body h2 {
+  @apply mt-8 mb-3 text-xl font-semibold tracking-tight;
+}
+.article-body h3 {
+  @apply mt-6 mb-2 text-base font-semibold tracking-tight;
+}
+.article-body p {
+  @apply mb-4;
+}
+.article-body ul {
+  @apply mb-4 list-disc space-y-1.5 pl-5;
+}
+.article-body ol {
+  @apply mb-4 list-decimal space-y-1.5 pl-5;
+}
+.article-body li > p {
+  @apply mb-1;
+}
+.article-body blockquote {
+  @apply mb-4 rounded-r-xl border-l-2 border-primary/60 bg-primary/5 px-4 py-3 text-sm italic text-muted-foreground;
+}
+.article-body blockquote p {
+  @apply mb-0;
+}
+.article-body code {
+  @apply rounded-md bg-muted px-1.5 py-0.5 font-mono text-[13px];
+}
+.article-body strong {
+  @apply font-semibold text-foreground;
+}
+.article-body hr {
+  @apply my-8 border-t border-input;
 }

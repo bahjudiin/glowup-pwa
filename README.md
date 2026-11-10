@@ -34,6 +34,8 @@ npm install        # requires network access to the npm registry
 npm run dev        # starts dev server on http://localhost:3000
 npm run build      # production build
 npm start          # serve production build
+npm test           # data-consistency check (categories / sub-tabs / icons)
+npm run test:queries  # sort / filter / search / markdown renderer checks
 ```
 
 ### Tech stack
@@ -43,11 +45,30 @@ npm start          # serve production build
 - **shadcn/ui** primitives (Radix UI based)
 - **Lucide React** icons
 - **next-themes** (dark mode)
-- **Framer Motion** (animations)
+
+### Navigation hierarchy
+
+| Tier | Control | State |
+|------|---------|-------|
+| 1 | Bottom nav: Home, Categories, Products, Foods, Meals + theme toggle | route path |
+| 2 | Category tab bar (`components/category-tabs.tsx`) | `?category=<id>` |
+| 3 | Sub-tab bar (`components/sub-tabs.tsx`) | `?tab=<id>` |
+
+All list state lives in the query string, so every view is shareable and survives a reload:
+
+- `?category=` — category (tier 2)
+- `?tab=` — sub-tab within a category (tier 3); cleared automatically when the category changes
+- `?sort=` — `default` · `evidence` · `cost` · `name`
+- `?evidence=` — evidence grade
+- `?cost=` — cost tier
+- `?verified=true` — verified prices only
+- `?q=` — free-text search across articles, products, foods and meals
 
 ### Routes
-- `/` — Home with featured articles, top products, categories
-- `/categories/[slug]` — Category detail with article list
+- `/` — Home: featured decks (Big D, Sleep & Recovery), all 12 categories, sortable/filterable library, and a cross-entity search view when `?q=` is set
+- `/categories` — index of all 12 categories with their sub-sections
+- `/categories/[slug]` — Category detail: sub-tabs + live article list
+- `/articles/[id]` — Article reader (markdown rendered by `lib/markdown.ts`)
 - `/products` — Product directory with filters & sort
 - `/products/[id]` — Product detail page
 - `/foods` — High-volume low-calorie food tables
@@ -64,9 +85,13 @@ All content is assembled from the MD files in `research_library_md/`:
 
 ## Deploy (free)
 
-- **Vercel**: push to GitHub, import repo, deploy (free tier)
-- **Netlify**: drag & drop the `index.html` folder or connect GitHub
-- **GitHub Pages**: enable Pages in repo settings
+- **Vercel**: push to GitHub, import repo, deploy (free tier). Note: the repo still ships a
+  legacy `vercel.json` that builds the standalone `index.html` — delete it (or drop the
+  `builds`/`routes` blocks) so Vercel uses the Next.js build output in `.next/`.
+- **Netlify / GitHub Pages**: serve the standalone `index.html` build.
+
+> Before committing, add `node_modules/`, `.next/`, `.next-env.d.ts`, `tsconfig.tsbuildinfo`
+> and `.shots/` to `.gitignore` — the current file only ignores `.vercel`.
 
 ## Android (Capacitor) — optional
 
