@@ -14,7 +14,7 @@ import { dirname, join } from 'node:path';
 import vm from 'node:vm';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const indexPath = join(here, '..', 'index.html');
+const indexPath = join(here, '..', 'public', 'standalone', 'index.html');
 const html = readFileSync(indexPath, 'utf8');
 
 const failures = [];

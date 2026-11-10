@@ -1,10 +1,9 @@
-.vercel
 node_modules
 .next
 out
 dist
+.vercel
 *.log
 .DS_Store
 .env*.local
-
-.vercel
+tsconfig.tsbuildinfo
