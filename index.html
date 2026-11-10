@@ -933,8 +933,10 @@ function openSheet(){$('#filterSheet').classList.add('open');document.body.style
 function closeSheet(){$('#filterSheet').classList.remove('open');document.body.style.overflow=''}
 
 function setState(partial){
+  const prevCategory=state.category;
   Object.assign(state,partial);
-  if(partial.category && partial.category!==state.category) state.subTab='all';
+  // switching category invalidates the sub-tab (the two hierarchies differ)
+  if(partial.category && partial.category!==prevCategory) state.subTab='all';
   persistState();
   renderCategoryTabs();
   renderSubTabs();
