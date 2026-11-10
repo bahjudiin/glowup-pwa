@@ -307,8 +307,9 @@ await page.waitForTimeout(300);
 const catTabs = await page.$$eval('#screen-home .cat-tab', e => e.map(x => x.textContent.trim()));
 check('home has 2 category tabs', catTabs.length === 2 && /Health/.test(catTabs[0]) && /Grooming/.test(catTabs[1]), catTabs.join(' | '));
 const hStabs = await page.$$eval('#cat-health .stab', e => e.map(x => x.textContent.trim()));
-check('health has 5 sub-tabs', hStabs.length === 5, hStabs.join(' | '));
+check('health has 6 sub-tabs', hStabs.length === 6, hStabs.join(' | '));
 check('Big D sub-tab is labelled and reachable', hStabs.some(s => /Big D/i.test(s)), hStabs.join(' | '));
+check('Sleep sub-tab is labelled and reachable', hStabs.some(s => /Sleep/i.test(s)), hStabs.join(' | '));
 check('only one pane visible on home', (await page.$$eval('#screen-home .tab-pane', e => e.filter(x => x.style.display !== 'none').length)) === 1);
 
 // click every home sub-tab
@@ -335,6 +336,7 @@ check('every home sub-tab shows exactly 1 pane', homeOk === homeTotal, homeOk + 
 const homeTxt = await page.textContent('#screen-home');
 check('existing eyes content intact', homeTxt.includes('20-20-20') && homeTxt.includes('Digital Eye Strain'));
 check('existing big-d content intact', homeTxt.includes('Shilajit') && homeTxt.includes('Tongkat'));
+check('existing sleep content intact', homeTxt.includes('CBT-I') && homeTxt.includes('Sleep Apnoea') && homeTxt.includes('ghrelin'));
 // the fragrance/hair tables moved into the Products catalogue
 check('existing hair content intact', homeTxt.includes('Minoxidil') && homeTxt.includes('Rosemary'));
 const links = await page.$$eval('#screen-home a.shop-btn', a => a.length);

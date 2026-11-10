@@ -53,7 +53,8 @@ export const HOME_GROUPS = [
       'h-face': { label: 'Face', icon: '\u{1F9CD}', tone: 'gold', n: 2, keywords: 'jawline symmetry skin brows mewing debloat routine score' },
       'h-lips': { label: 'Lips', icon: '\u{1F444}', tone: 'pink', n: 3, keywords: 'lip balm exfoliate protect hydrate chapped' },
       'h-teeth': { label: 'Teeth', icon: '\u{1F9B7}', tone: 'blue', n: 4, keywords: 'brush floss mouthwash whitening tongue coffee' },
-      'h-bigd': { label: 'Big D', icon: '\u{1F4D8}', tone: 'red', n: 5, priority: 60, keywords: 'big d bigd vitality sexual health testosterone ed pe fertility sperm herbs attraction pheromones shilajit ashwagandha tongkat' }
+      'h-bigd': { label: 'Big D', icon: '\u{1F4D8}', tone: 'red', n: 5, priority: 60, keywords: 'big d bigd vitality sexual health testosterone ed pe fertility sperm herbs attraction pheromones shilajit ashwagandha tongkat' },
+      'h-sleep': { label: 'Sleep', icon: '\u{1F634}', tone: 'indigo', n: 6, keywords: 'sleep sleep debt recovery insomnia cbt-i apnea osa snoring circadian melatonin caffeine appetite satiety ghrelin leptin' }
     }
   },
   {

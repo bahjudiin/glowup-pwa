@@ -32,12 +32,14 @@ function todayKey() {
 const TONES = {
   accent: 'var(--accent2)', gold: 'var(--gold)', green: 'var(--green2)',
   red: '#ff6b6b', blue: 'var(--blue)', pink: 'var(--pink)',
-  orange: 'var(--orange)', text2: 'var(--text2)', text3: 'var(--text3)'
+  orange: 'var(--orange)', indigo: '#818cf8',
+  text2: 'var(--text2)', text3: 'var(--text3)'
 };
 const TONE_BG = {
   accent: 'rgba(124,92,252,.15)', gold: 'rgba(245,200,66,.15)', green: 'rgba(46,204,113,.15)',
   red: 'rgba(231,76,60,.15)', blue: 'rgba(79,195,247,.15)', pink: 'rgba(244,114,182,.15)',
-  orange: 'rgba(251,146,60,.15)', text2: 'rgba(144,144,176,.15)', text3: 'rgba(90,90,122,.15)'
+  orange: 'rgba(251,146,60,.15)', indigo: 'rgba(129,140,248,.15)',
+  text2: 'rgba(144,144,176,.15)', text3: 'rgba(90,90,122,.15)'
 };
 const tone = t => TONES[t] || TONES.accent;
 const toneBg = t => TONE_BG[t] || TONE_BG.accent;
