@@ -1,6 +1,6 @@
 /* Round-11 QA: the merged Library (4 sections × sub-tabs) renders, the reader
    mounts on every topic, links resolve, and nothing overflows on a phone.
-   Usage: node dev/library-test.js [http://127.0.0.1:8080 | file:///home/user/glowup-standalone.html] */
+   Usage: node dev/library-test.js [http://127.0.0.1:8080 | file://<repo>/dist/glowup-standalone.html] */
 const { chromium } = require('playwright-core');
 const URL_ARG = process.argv[2] || 'http://127.0.0.1:8080/index.html';
 (async () => {

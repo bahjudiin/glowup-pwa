@@ -1,8 +1,9 @@
 const { chromium } = require('playwright-core');
+const { target } = require('./target');;
 (async () => {
   const b = await chromium.launch({ args: ['--no-sandbox','--disable-dev-shm-usage'] });
   const errs = [];
-  for (const [label, url, w] of [['standalone-file','file:///home/user/glowup-standalone.html',390], ['hosted','http://127.0.0.1:8080/index.html',390]]) {
+  for (const [label, url, w] of [['standalone-file',target(),390], ['hosted','http://127.0.0.1:' + (process.env.PORT || '8080') + '/index.html',390]]) {
     const p = await b.newPage({ viewport: { width: w, height: 844 }, deviceScaleFactor: 2 });
     p.on('pageerror', e => errs.push(label + ' PAGEERROR ' + e.message));
     p.on('console', m => { if (m.type() === 'error') errs.push(label + ' CONSOLE ' + m.text()); });

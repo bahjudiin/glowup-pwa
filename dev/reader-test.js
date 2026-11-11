@@ -1,4 +1,5 @@
 const { chromium } = require('playwright-core');
+const { target } = require('./target');;
 
 const MOCK = `
   (function () {
@@ -45,7 +46,7 @@ const MOCK = `
   p.on('pageerror', e => errs.push('PAGEERROR ' + e.message));
   p.on('console', m => { if (m.type() === 'error') errs.push('CONSOLE ' + m.text()); });
 
-  await p.goto('file:///home/user/glowup-standalone.html', { waitUntil: 'load' });
+  await p.goto(target(), { waitUntil: 'load' });
   await p.waitForTimeout(300);
   await p.click('[data-nav="learn"]'); await p.waitForTimeout(200);
   await p.click('[data-subnav="articles"]:visible'); await p.waitForTimeout(250);

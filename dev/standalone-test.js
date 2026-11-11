@@ -1,4 +1,5 @@
 const { chromium } = require('playwright-core');
+const { target } = require('./target');;
 (async () => {
   const b = await chromium.launch({ args: ['--no-sandbox','--disable-dev-shm-usage'] });
   const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
@@ -8,7 +9,7 @@ const { chromium } = require('playwright-core');
   p.on('console', m => { if (m.type() === 'error') errs.push('CONSOLE ' + m.text()); });
   p.on('request', r => { if (!r.url().startsWith('file://')) reqs.push(r.url().slice(0,80)); });
 
-  await p.goto('file:///home/user/glowup-standalone.html', { waitUntil: 'load' });
+  await p.goto(target(), { waitUntil: 'load' });
   await p.waitForTimeout(600);
 
   const boot = await p.evaluate(() => ({

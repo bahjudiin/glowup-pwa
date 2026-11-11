@@ -1,7 +1,8 @@
 /* Round 9 QA — five-tab shell, Today dashboard, Blueprint progress, filters.
    Checks every view at six widths for overflow, plus persistence + interactions. */
 const { chromium } = require('playwright-core');
-const APP = 'file:///home/user/glowup-standalone.html';
+const { target } = require('./target');;
+const APP = target();
 const VIEWS = ['home', 'plan', 'guides', 'articles', 'food', 'meals', 'products'];
 
 (async () => {

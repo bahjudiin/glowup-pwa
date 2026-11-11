@@ -6,24 +6,24 @@ every asset is local and cached by a service worker.
 
 | | |
 |---|---|
-| **Articles** | 33, across 11 categories, each graded and citation-linked (de-duplicated: one shared safety block per cluster, no repeated lines) |
+| **Articles** | 38, across 12 categories, each graded and citation-linked (de-duplicated: one shared safety block per cluster, no repeated lines) |
 | **Products** | 18, of which **12 have prices verified on iHerb (1 Nov 2026)** with cost-per-serving maths |
 | **Nutrition** | 26 USDA FoodData Central entries (kcal, protein, fibre, water, satiety evidence) |
 | **Meals** | 5 templates + 7-day rotation + one-page shopping list (persisted) |
 | **Stack** | Vanilla ES2019 + Tailwind 3 (compiled locally) + shadcn/ui-style primitives |
 | **Reader** | Read-aloud narration + saved text highlights on every article (free device voices) |
-| **Photography** | 23 photographs — hero, all 11 categories, four food groups, five meal templates, article library — inlined as data URIs |
+| **Photography** | 33 photographs — hero, 11 library sections, four food groups, five meal templates, article library, ten guide pages — inlined as data URIs |
 | **Voice** | Human-voice editorial copy layer + narration with breath groups and real pauses |
 | **Design** | Apple design system (`DESIGN.md`): 17 px body, SF Pro stack, 18 px cards, pill buttons, zero decorative gradients or UI shadows |
 | **Size** | 29 KB CSS · 73 KB JS · 165 KB data · 867 KB photos — **no external requests** |
 
-![Home](docs/apple-home.jpg)
+![Home](docs/glowup-home.jpg)
 
 ---
 
 ## 0. Single-file build (no server, no install)
 
-`glowup-standalone.html` (**1.16 MB**) is the entire app — markup, compiled CSS, JS, the full data
+`glowup-standalone.html` (**2.03 MB**) is the entire app — markup, compiled CSS, JS, the full data
 layer and an inline SVG icon — in **one file with zero external requests**. Double-click it, or
 send it to a phone; it works from `file://`, offline, with no server and no build step.
 
@@ -34,7 +34,7 @@ send it to a phone; it works from `file://`, offline, with no server and no buil
   *installability* is a hosted-only feature. The standalone file is offline by construction; on
   iOS/Android use the browser's “Add to Home Screen” (it keeps working offline because there is
   nothing to fetch).
-* Regenerate it any time with `python3 build_standalone.py` (runs after `npm run build`).
+* Regenerate it any time with `npm run build:standalone` (runs after `npm run build`).
 
 | Build | Files | Best for |
 |---|---|---|
@@ -60,9 +60,16 @@ Rebuild after editing content or styles:
 ```bash
 npm install               # tailwindcss + playwright-core (dev only)
 npm run build             # art.py → extract.py → data.js → assets/app.css
-npm run build:standalone  # → ../glowup-standalone.html (single file)
+npm run build:standalone  # → dist/glowup-standalone.html (single file)
 npm run watch:css         # while editing styles
 npm test                  # headless PWA + interaction tests (dev/pwa-test.js)
+npm run test:queries      # sort / filter / search behaviour across every surface
+npm run test:standalone   # the single-file build, loaded from file://
+npm run test:e2e          # drives the real UI (tabs, Big D, read-aloud, summary)
+npm run test:design       # the rendered design tokens, both themes
+npm run test:docs         # the README's counts, links and screenshots
+npm run test:all          # all of the above
+npm run shots:docs        # regenerate the README screenshots from the real UI
 ```
 
 ---
@@ -90,8 +97,9 @@ glowup/
 ├── topics.js               # window.GLOWUP_TOPICS — the Library: 4 sections, 19 topics
 ├── art/                    # art/photo (build sources) + art/illustrations (archived vector set)
 ├── art.py                  # illustration pipeline → art.js
-├── build_standalone.py     # inlines everything into ../glowup-standalone.html
+├── build_standalone.py     # inlines everything into dist/glowup-standalone.html
 ├── dev/                    # Playwright checks: PWA, standalone, reader, preview health, screenshots
+│   target.js             # resolves which build a dev script drives (no hardcoded paths)
 └── docs/                   # JPEG screenshots used in this README
 ```
 
@@ -106,7 +114,7 @@ runtime — which is why it works fully offline and instantly on a slow connecti
 window.GLOWUP_DATA = {
   meta: {
     app, tagline, built, sources, priceVerifiedOn, disclaimer,
-    counts: { articles: 33, categories: 11, products: 18, nutrition: 26, meals: 5 }
+    counts: { articles: 38, categories: 12, products: 18, nutrition: 26, meals: 5 }
   },
   categories: [{ id, name, blurb }],           // 11
   articles: [{
@@ -161,7 +169,18 @@ USDA dataset, it does not appear.
 
 ---
 
-## 4. Design system — shadcn/ui primitives in plain CSS
+## 4. Design system " + EM + " WattVision tokens on shadcn/ui primitives in plain CSS
+
+The shipped interface is the **WattVision** system (§10h): a technical-monitoring look with
+hairline borders instead of shadows, one cyan accent for data and actions, lime for live/normal
+and red for alerts, Inter for text and JetBrains Mono for every number that matters. It is
+implemented as Tailwind tokens over shadcn/ui primitives in plain CSS — no framework runtime.
+
+```bash
+npm run test:design   # asserts the rendered tokens in both themes
+npm run shots:design  # screenshots of every main view in both themes
+```
+
 
 Tailwind is compiled locally with the **shadcn/ui token contract** (HSL CSS variables, `.dark`
 class strategy). Because the site ships no React runtime, the primitives are hand-ported to
@@ -324,6 +343,8 @@ Installing better free voices (no purchase, no account):
 | Check | Result |
 |---|---|
 | **Standalone file** — `file://` load, all views | 38 articles / 26 foods / 18 products render, **0 external requests**, 0 errors |
+| **Queries** " + "—" + " sort, filter and search (`npm run test:queries`) | category / grade / text filters match the data exactly; Evidence-first, A" + "–" + "Z and Shortest sorts are correctly ordered; cost-per-serving sort is ascending; verified-only matches the data; search spans Library, Guides, Articles and Products and reports an empty result honestly |
+| **Docs** " + "—" + " the README against the build (`npm run test:docs`) | every count the README quotes matches the built data; every screenshot it links exists; the nine WattVision hexes are in the stylesheet |
 | **Standalone file** — theme + shopping persistence on `file://` | dark default, toggle persists, `1/27 checked` survives reload |
 | Console/page errors on load and across all views | **0** |
 | Service worker | active, scope `/`, cache `glowup-v12` with **16** entries |
@@ -334,7 +355,7 @@ Installing better free voices (no purchase, no account):
 | Grade filter = High | 33 → **9** articles |
 | Products | 18 listed, **12** with verified prices when the switch is on |
 | Search “protein” | 35 results across 4 groups; “creatine” → 12; “vitamin d” → products group |
-| **Photography** — 15 images on Home, 11 category strips, 4 food groups, 5 meal photos | all decoded from data URIs (`naturalWidth > 0`), **0 external requests**, identical on the standalone file and the hosted build |
+| **Photography** — 33 images: hero, library sections, food groups, meal templates, article library, guide pages | all decoded from data URIs (`naturalWidth > 0`), **0 external requests**, identical on the standalone file and the hosted build |
 | **Copy layer** — all 33 hooks, intros, empty states | rendered from `copy.js`; article cards and sheets show the hook, data fields untouched |
 | **Narration pacing** | sentence gaps 130/380/620 ms by block type, breath groups ≤150 chars, pauses cleared correctly on stop/pause |
 | **Reader** — 57 sentence atoms on a test article, voice ranking, playback | premium voice auto-selected; Play advances sentence-by-sentence, counter `11/57`, Pause → Resume, speed change 1×→1.3× takes effect mid-article, Stop clears the highlight |
@@ -374,8 +395,9 @@ Reproduce with `npm test` (needs a server on `:8123`, see `dev/pwa-test.js`).
 
 ## 10b. Design system and content hygiene (Round 6)
 
-**Apple design system.** `DESIGN.md` is the vendored spec (`npx getdesign add apple`) and the
-source of truth for the interface. What it changed:
+**Apple design system (Round 6, since superseded).** This was the first pass and it has since
+been replaced by the WattVision system in §10h — the palette, type scale and component rules
+below describe what Round 6 changed, not what ships today. What it changed:
 
 * **Type** — one stack (`-apple-system`/SF Pro), body 17 px at 1.47, caption 13 px, display
   28–40 px at weight 600 with −0.022 em tracking. No 500-weight, no second display face.
@@ -401,10 +423,12 @@ source of truth for the interface. What it changed:
 * The shared safety cluster is stored once; the other eight articles carry `safetyRef` and render
   a “Safety and contraindications are shared with …” link that opens the owning article.
 
-Screenshots of the finished surfaces live in `docs/`: `apple-home.jpg`, `apple-home-light.jpg`,
-`apple-articles.jpg`, `apple-article.jpg`, `apple-food.jpg`, `apple-products.jpg`,
-`apple-meals.jpg`, `apple-search.jpg`, `apple-supplements.jpg`, `apple-fasting-claims.jpg`
-(regenerate with `node dev/apple-shots.js`).
+Screenshots of the finished surfaces live in `docs/`: `glowup-home.jpg`, `glowup-home-light.jpg`,
+`glowup-library.jpg`, `glowup-guides.jpg`, `glowup-articles.jpg`, `glowup-article.jpg`,
+`glowup-food.jpg`, `glowup-food-table.jpg`, `glowup-meals.jpg`, `glowup-products.jpg`,
+`glowup-ledger.jpg`, `glowup-search.jpg`, `glowup-supplements.jpg`,
+`glowup-fasting-claims.jpg`, `glowup-plan.jpg` (regenerate with `npm run shots:docs` —
+it drives the real UI, so the images in this file can never show a UI the app no longer has).
 
 ---
 
@@ -443,7 +467,7 @@ The three data views now carry the whole record, not a summary of it.
 Home also gained three quick links — Food table, Supplement ledger, Shopping list — so the deeper
 views are one tap from the top.
 
-Screenshots: `docs/apple-products.jpg`, `docs/apple-ledger.jpg`, `docs/apple-food-table.jpg`.
+Screenshots: `docs/glowup-products.jpg`, `docs/glowup-ledger.jpg`, `docs/glowup-food-table.jpg`.
 
 ---
 
@@ -707,7 +731,10 @@ when narration starts so the highlighted sentence is visible.
 - The generated artefacts (`art.js`, `data.json`) are now written with LF endings, so a
   rebuild on Windows does not produce a spurious diff.
 
-## 10h. Round 13 — WattVision design system
+## 10h. Round 13 " + EM + " WattVision design system
+
+This **supersedes** the Round 6 Apple system in §10b. The app now reads as a technical
+monitoring dashboard rather than a consumer app.
 
 The visual language is now a technical-monitoring dashboard rather than a consumer app:
 hairline borders instead of shadows, one cyan accent for data and actions, lime for
@@ -759,6 +786,8 @@ the single-file build at zero network requests. Regenerate with `npm run fonts`.
 card border, KPI face/weight/size, title size, the three accent semantics, row hover, alert
 surface, chart colour, and that both webfonts actually loaded.
 `npm run shots:design` writes screenshots of Today / Library / article / Fuel in both themes.
+`npm run shots:docs` regenerates the README screenshots from the live app, so the images in
+this file can never show a UI the app no longer has.
 
 ## 11. Known limitations / next steps
 

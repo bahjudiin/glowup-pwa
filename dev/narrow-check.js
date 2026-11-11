@@ -1,9 +1,10 @@
 const { chromium } = require('playwright-core');
+const { target } = require('./target');;
 (async () => {
   const b = await chromium.launch({ args: ['--no-sandbox','--disable-dev-shm-usage'] });
   for (const w of [320, 360, 390, 430]) {
     const p = await b.newPage({ viewport: { width: w, height: 800 } });
-    await p.goto('file:///home/user/glowup-standalone.html', { waitUntil: 'load' });
+    await p.goto(target(), { waitUntil: 'load' });
     await p.click('[data-nav="learn"]'); await p.waitForTimeout(180);
     await p.click('[data-subnav="articles"]:visible'); await p.waitForTimeout(220);
     await p.locator('#articles-list [data-article]').first().click();

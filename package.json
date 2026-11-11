@@ -16,10 +16,15 @@
     "build:all": "npm run build && npm run build:standalone",
     "usda:cache": "node scripts/build-usda-cache.cjs",
     "test:e2e": "node scripts/verify-app.mjs",
-    "test:all": "npm run test && npm run test:queries && npm run test:standalone && npm run test:e2e && npm run test:design",
+    "test:all": "npm run test && npm run test:queries && npm run test:standalone && npm run test:e2e && npm run test:design && npm run test:docs",
     "test:design": "node scripts/verify-design.mjs",
     "shots:design": "node scripts/shots-design.mjs",
-    "fonts": "node scripts/fetch-fonts.mjs ."
+    "fonts": "node scripts/fetch-fonts.mjs .",
+    "shots:docs": "node scripts/shots-docs.mjs",
+    "count": "node scripts/count-content.mjs",
+    "test:docs": "node scripts/verify-docs.mjs",
+    "test:queries": "node scripts/check-queries.mjs",
+    "test:standalone": "node dev/standalone-test.js"
   },
   "devDependencies": {
     "playwright-core": "^1.47.2",

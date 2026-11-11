@@ -38,7 +38,8 @@ const MOCK = `
 /* Guides reader QA: listen bar on every guide page, narration, highlighting,
    persistence per page, and no cross-talk with the article reader. */
 const { chromium } = require('playwright-core');
-const APP = 'file:///home/user/glowup-standalone.html';
+const { target } = require('./target');;
+const APP = target();
 
 (async () => {
   const b = await chromium.launch({ args: ['--no-sandbox', '--disable-dev-shm-usage'] });

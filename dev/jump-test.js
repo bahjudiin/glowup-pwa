@@ -1,4 +1,5 @@
 const { chromium } = require('playwright-core');
+const { target } = require('./target');;
 const MOCK = `
   (function () {
     const voices = [
@@ -47,7 +48,7 @@ const MOCK = `
   p.on('pageerror', e => errs.push('PAGEERROR ' + e.message));
   p.on('console', m => { if (m.type() === 'error') errs.push('CONSOLE ' + m.text()); });
 
-  await p.goto('file:///home/user/glowup-standalone.html', { waitUntil: 'load' });
+  await p.goto(target(), { waitUntil: 'load' });
   await p.waitForTimeout(400);
   await p.evaluate(() => { document.documentElement.style.scrollBehavior = 'auto'; window.__ttsDelay = 1500; });
   await p.click('[data-nav="learn"]');
@@ -67,7 +68,7 @@ const MOCK = `
   /* 2. start reading, then tap a far sentence */
   await p.click('#reader-play');
   await p.waitForTimeout(400);
-  const target = await p.evaluate(() => {
+  const targetInfo = await p.evaluate(() => {
     const s = document.querySelectorAll('#guide-content .s')[24];
     return { text: s.textContent.replace(/\s+/g, ' ').trim().slice(0, 40), idx: 24 };
   });
@@ -129,6 +130,6 @@ const MOCK = `
   }));
 
   await b.close();
-  console.log(JSON.stringify({ idleTap, target, tapJump, next, prev, paraTap, linkTap, articleTap,
+  console.log(JSON.stringify({ idleTap, target: targetInfo, tapJump, next, prev, paraTap, linkTap, articleTap,
     errors: errs.length ? errs : 'none' }, null, 1));
 })();

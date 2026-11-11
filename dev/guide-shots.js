@@ -1,10 +1,11 @@
 /* Screenshots of all six guide pages, top of page + one mid-page table. */
 const { chromium } = require('playwright-core');
+const { target } = require('./target');;
 (async () => {
   const b = await chromium.launch({ args: ['--no-sandbox', '--disable-dev-shm-usage'] });
   const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
   const p = await ctx.newPage();
-  await p.goto('file:///home/user/glowup-standalone.html', { waitUntil: 'load' });
+  await p.goto(target(), { waitUntil: 'load' });
   await p.waitForTimeout(600);
   await p.evaluate(() => { document.documentElement.style.scrollBehavior = 'auto'; });
   await p.click('[data-nav="learn"]'); await p.waitForTimeout(300);

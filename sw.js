@@ -1,10 +1,15 @@
 /* GlowUp service worker — app-shell + data precache, offline-first.
    Bump CACHE when any shell asset changes. */
-const CACHE = "glowup-v13";
+const CACHE = "glowup-v14";
 const ASSETS = [
   "./",
   "./index.html",
   "./assets/app.css",
+  "./assets/fonts.css",
+  "./assets/fonts/inter-400.woff2",
+  "./assets/fonts/inter-600.woff2",
+  "./assets/fonts/inter-700.woff2",
+  "./assets/fonts/jetbrains-mono-700.woff2",
   "./assets/app.js",
   "./art.js",
   "./copy.js",

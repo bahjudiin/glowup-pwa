@@ -1,11 +1,12 @@
 const { chromium } = require('playwright-core');
+const { target } = require('./target');;
 (async () => {
   const b = await chromium.launch({ args: ['--no-sandbox','--disable-dev-shm-usage'] });
   const p = await b.newPage({ viewport: { width: 390, height: 844 } });
   const errs = [];
   p.on('pageerror', e => errs.push('PAGEERROR ' + e.message));
   p.on('console', m => { if (m.type() === 'error') errs.push('CONSOLE ' + m.text()); });
-  await p.goto('file:///home/user/glowup-standalone.html', { waitUntil: 'load' });
+  await p.goto(target(), { waitUntil: 'load' });
   await p.click('[data-nav="learn"]'); await p.waitForTimeout(200);
   await p.click('[data-subnav="articles"]:visible'); await p.waitForTimeout(250);
   await p.locator('#articles-list [data-article]').first().click();
