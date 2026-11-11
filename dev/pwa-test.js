@@ -27,10 +27,19 @@ const { chromium } = require('playwright-core');
     return await p.evaluate(() => ({
       title: document.title,
       articlesRendered: !!document.querySelector('#view-home').innerHTML.length,
-      banner: !document.querySelector('#offline-banner').classList.contains('hidden')
+      banner: !document.querySelector('#offline-banner').classList.contains('hidden'),
+      // the webfonts must survive the offline reload: the shell is precached,
+      // so an offline visit has to render Inter, not the system fallback
+      inter: document.fonts.check('14px Inter'),
+      mono: document.fonts.check('700 32px "JetBrains Mono"'),
+      fontFace: getComputedStyle(document.body).fontFamily.split(',')[0].replace(/"/g, '')
     }));
   }).catch(e => 'RELOAD FAILED: ' + e.message);
   console.log('offline:', offline);
+  if (typeof offline === 'object') {
+    console.log('offline keeps the webfonts:', offline.inter && offline.mono ? 'yes' : 'NO',
+      '— body font', offline.fontFace);
+  }
   await ctx.setOffline(false);
 
   // theme persistence
